@@ -1,0 +1,68 @@
+@import "bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+   font-family: 'Poppins', sans-serif;
+}
+body,
+html {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+   background: white;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5em;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;  /* Adds space between the heading and content */
+}
+
+.form-container {
+    border: 1px solid black;
+    padding: 20px;  /* Adds padding around the form content */
+    margin: 20px auto;  /* Centers the form on the page */
+    width: 300px;  /* Fixed width for the form */
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* Styling for form fields */
+.label-text {
+    display: block;  /* Forces label onto its own line */
+    margin-top: 10px;  /* Adds spacing above the field */
+    font-weight: bold;  /* Makes label text bold */
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;  /* Makes the field stretch to the width of its container */
+    padding: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;  /* Includes padding in element's width calculation */
+    margin-top: 5px;  /* Adds space above the input */
+    margin-bottom: 15px;  /* Adds space below the input */
+}
+
+
+.btn-login {
+    display: block;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;  /* Removes any underline */
+    margin-top: 15px;
+    width: 100%;  /* Makes the button fill the form's width */
+}

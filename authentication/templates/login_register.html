@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <link rel="stylesheet" href="{% static 'main/login_register.css' %}">
+{% endblock meta %}
+
+{% block content %}
+<div class="form-container">
+    <h2>PacilFlix - &lt;16&gt;</h2>
+
+    <div class="mt-2">
+        <a class="btn-login" href="#" style="margin-bottom: 25px;" >Login</a>
+    </div>
+    <div class="mt-2">
+        <a class="btn-register" href="#">Register</a>
+    </div>
+</div>
+{% endblock content %}
