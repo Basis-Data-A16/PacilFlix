@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block meta %}
-    <link rel="stylesheet" href="{% static 'main/login_register.css' %}">
-{% endblock meta %}
 
 {% block content %}
-<div class="form-container">
-    <h2>PacilFlix - &lt;16&gt;</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5 shadow">
+                <div class="card-body text-center">
+                    <h2 class="card-title">PacilFlix - &lt;16&gt;</h2>
 
-    <div class="mt-2">
-        <a class="btn-login" href="#" style="margin-bottom: 25px;" >Login</a>
-    </div>
-    <div class="mt-2">
-        <a class="btn-register" href="#">Register</a>
+                    <div class="mt-4">
+                        <a class="btn btn-primary btn-lg btn-block" href="#" role="button">Login</a>
+                    </div>
+                    <div class="mt-4">
+                        <a class="btn btn-secondary btn-lg btn-block" href="#" role="button">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
