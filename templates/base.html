@@ -18,24 +18,65 @@
   
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="#">Navbar Placeholder</a>
+    <a class="navbar-brand" href="#">{% if user.is_authenticated %}Hi {{ user.username }}, Welcome to Pacilflix!{% else %}PacilFlix{% endif %}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logout</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Daftar Tayangan</a>
+            <a class="dropdown-item" href="#">Daftar Kontributor</a>
+            <a class="dropdown-item" href="#">Kelola Daftar Favorit</a>
+            <a class="dropdown-item" href="#">Kelola Daftar Unduhan</a>
+            <a class="dropdown-item" href="#">Kelola Langganan</a>
+          </div>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">Trailer Tayangan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
+          <a class="nav-link" href="#">Login</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
-        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
+  <!-- <div class="container">
+    <a class="navbar-brand" href="#">Hi Anakin, Welcome to Pacilflix!</a>
+    <!-- <span class="navbar-text">Hi Anakin, Welcome to Pacilflix!</span> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logout</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Daftar Tayangan</a>
+            <a class="dropdown-item" href="#">Daftar Kontributor</a>
+            <a class="dropdown-item" href="#">Kelola Daftar Favorit</a>
+            <a class="dropdown-item" href="#">Kelola Daftar Unduhan</a>
+            <a class="dropdown-item" href="#">Kelola Langganan</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div> -->
 </nav>
 
 <div class="container mt-3">
