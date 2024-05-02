@@ -24,43 +24,32 @@ Halaman Kelola Langganan
       </div>
 
       <h2 class="text-center mb-4">Pilih Paket Lain:</h2>
-      <div class="card shadow mb-4">
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">Nama</th>
-                  <th scope="col">Harga</th>
-                  <th scope="col">Resolusi Layar</th>
-                  <th scope="col">Dukungan Perangkat</th>
-                  <th scope="col">Beli</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Basic</td>
-                  <td>100.000</td>
-                  <td>HD</td>
-                  <td>Smartphone, Tablet</td>
-                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
-                </tr>
-                <tr>
-                  <td>Standar</td>
-                  <td>150.000</td>
-                  <td>Full HD</td>
-                  <td>Laptop, Smart TV</td>
-                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
-                </tr>
-                <tr>
-                  <td>Premium</td>
-                  <td>200.000</td>
-                  <td>Ultra HD</td>
-                  <td>Smartphone, Tablet, Laptop, Smart TV</td>
-                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="card-deck">
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Basic</h5>
+            <p class="card-text">Harga: 100.000</p>
+            <p class="card-text">Resolusi Layar: HD</p>
+            <p class="card-text">Dukungan Perangkat: Smartphone, Tablet</p>
+            <button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Beli</button>
+          </div>
+        </div>
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Standar</h5>
+            <p class="card-text">Harga: 150.000</p>
+            <p class="card-text">Resolusi Layar: Full HD</p>
+            <p class="card-text">Dukungan Perangkat: Laptop, Smart TV</p>
+            <button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Beli</button>
+          </div>
+        </div>
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Premium</h5>
+            <p class="card-text">Harga: 200.000</p>
+            <p class="card-text">Resolusi Layar: Ultra HD</p>
+            <p class="card-text">Dukungan Perangkat: Smartphone, Tablet, Laptop, Smart TV</p>
+            <button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Beli</button>
           </div>
         </div>
       </div>
