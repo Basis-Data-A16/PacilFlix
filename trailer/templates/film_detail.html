@@ -38,8 +38,26 @@
 <div class="card shadow mt-3">
     <div class="card-body">
         <h2>Bagian Ulasan</h2>
-
-        <strong>Aak</strong>: What a movie! - Rating: 8.8
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="nama">Nama:</label>
+                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+            </div>
+            <div class="form-group">
+                <label for="deskripsi">Deskripsi Ulasan:</label>
+                <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
+        </form>
+        <hr>
+        <h3>Daftar Ulasan:</h3>
+        <div class="ulasan">
+            <p><strong>Aak</strong>: What a movie! - Rating: 8.8</p>
+        </div>
     </div>
 </div>
 {% endblock %}
