@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Tayangan{% endblock %}
+
+{% block content %}
+<h1>BERHASIL DITEMUKAN!</h1>
+<form class="form-inline mb-3" method="GET" action="{% url 'trailer:search_trailer' %}">
+    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Summertime Render" aria-label="Search">
+    <button class="btn btn-dark my-2 my-sm-0" type="submit">Cari</button>
+</form>
+
+<h2>Hasil Pencarian</h2>
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Sinopsis Trailer</th>
+                    <th scope="col">URL Trailer</th>
+                    <th scope="col">Tanggal Rilis Trailer</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Tayangan</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Summertime Render</td>
+                    <td>Upon hearing of Ushio's death, Shinpei returns to his hometown of Wakayama City on Hitogashima and reunites with his childhood friend's family. The funeral goes smoothly, but under the surface something strange is brewing on the island. What mysteries await him on this secluded summer island?</td>
+                    <td>https://youtu.be/6ZQH6Ytsl0Q</td>
+                    <td>2021-10-13</td>
+                  </tr>
+                {% for serie in series %}
+                <tr>
+                    <td>{{ serie.title }}</td>
+                    <td>{{ serie.synopsis }}</td>
+                    <td>{{ serie.trailer_url }}</td>
+                    <td>{{ serie.release_date }}</td>
+                    {% if user.is_authenticated %}
+                    <td><a href="{% url 'trailer:detail' serie.id %}" class="btn btn-dark">Tayangan</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
