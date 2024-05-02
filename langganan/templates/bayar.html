@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Halaman Beli
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2 class="text-center mb-4">Informasi Paket yang Ingin Dibeli:</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Nama: </strong>Premium</li>
+            <li class="list-group-item"><strong>Harga: </strong>200.000</li>
+            <li class="list-group-item"><strong>Resolusi Layar: </strong>Ultra HD</li>
+            <li class="list-group-item"><strong>Dukungan Perangkat: </strong>Smartphone, Tablet, Laptop, Smart TV</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="text-center mb-4">Pilih Metode Pembayaran:</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <div class="form-group">
+            <label for="metodePembayaran">Metode Pembayaran</label>
+            <select class="form-control" id="metodePembayaran">
+              <option value="transfer_bank">Transfer Bank</option>
+              <option value="kartu_kredit">Kartu Kredit</option>
+              <option value="e-wallet">E-Wallet</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton">Bayar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById('bayarButton').addEventListener('click', function() {
+    // Dapatkan nilai metode pembayaran yang dipilih
+    var metodePembayaran = document.getElementById('metodePembayaran').value;
+    
+    // Redirect ke halaman pembayaran dengan menambahkan query parameter metode pembayaran
+    window.location.href = '/langganan/pembayaran/?metode=' + metodePembayaran;
+  });
+</script>
+{% endblock %}

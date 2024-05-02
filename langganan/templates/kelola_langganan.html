@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Halaman Kelola Langganan
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2 class="text-center mb-4">Paket Langganan Aktif Anda:</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Nama: </strong>Standar</li>
+            <li class="list-group-item"><strong>Harga: </strong>150.000</li>
+            <li class="list-group-item"><strong>Resolusi Layar: </strong>Full HD</li>
+            <li class="list-group-item"><strong>Dukungan: </strong>Laptop, Smart TV</li>
+            <li class="list-group-item"><strong>Perangkat: </strong>Laptop</li>
+            <li class="list-group-item"><strong>Tanggal Dimulai: </strong>03/03/2024</li>
+            <li class="list-group-item"><strong>Tanggal Akhir: </strong>03/04/2024</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="text-center mb-4">Pilih Paket Lain:</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Nama</th>
+                  <th scope="col">Harga</th>
+                  <th scope="col">Resolusi Layar</th>
+                  <th scope="col">Dukungan Perangkat</th>
+                  <th scope="col">Beli</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Basic</td>
+                  <td>100.000</td>
+                  <td>HD</td>
+                  <td>Smartphone, Tablet</td>
+                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
+                </tr>
+                <tr>
+                  <td>Standar</td>
+                  <td>150.000</td>
+                  <td>Full HD</td>
+                  <td>Laptop, Smart TV</td>
+                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
+                </tr>
+                <tr>
+                  <td>Premium</td>
+                  <td>200.000</td>
+                  <td>Ultra HD</td>
+                  <td>Smartphone, Tablet, Laptop, Smart TV</td>
+                  <td><button type="button" class="btn btn-dark my-2 my-sm-0" id="bayarButton" onclick="window.location.href='{% url 'bayar' %}'">Bayar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-center mb-4">Riwayat Transaksi</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Nama Paket</th>
+                  <th scope="col">Tanggal Dimulai</th>
+                  <th scope="col">Tanggal Akhir</th>
+                  <th scope="col">Metode Pembayaran</th>
+                  <th scope="col">Tanggal Pembayaran</th>
+                  <th scope="col">Total Pembayaran</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Basic</td>
+                  <td>01/01/2024</td>
+                  <td>01/02/2024</td>
+                  <td>Kartu Kredit</td>
+                  <td>01/01/2024</td>
+                  <td>100.000</td>
+                </tr>
+                  <td>Premium</td>
+                  <td>02/03/2024</td>
+                  <td>02/04/2024</td>
+                  <td>E-Wallet</td>
+                  <td>02/03/2024</td>
+                  <td>200.000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
