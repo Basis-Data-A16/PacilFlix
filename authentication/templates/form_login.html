@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Login Form</title>
+    <link rel="stylesheet" href="{% static 'main/login_form.css' %}">
+{% endblock meta %}
+
+{% block content %}
+<div class="form-container">
+    <h2>LOGIN FORM</h2>
+
+    <form method="POST">
+        <label class="label-text" for="username">Username:</label>
+        <input type="text" id="username" name="username">
+
+        <label class="label-text" for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <button type="submit" class="btn-login">LOGIN</button>
+    </form>
+</div>
+{% endblock content %}
