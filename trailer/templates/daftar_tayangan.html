@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Tayangan{% endblock %}
+
+{% block content %}
+<h1>DAFTAR TAYANGAN</h1>
+<form class="form-inline mb-3" method="GET" action="{% url 'trailer:search_trailer' %}">
+    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Pencarian Tayangan berdasarkan judul" aria-label="Search">
+    <button class="btn btn-dark my-2 my-sm-0" type="submit">Cari</button>
+</form>
+
+{% if not user.is_authenticated %}
+<h2>10 Tayangan Terbaik Minggu Ini</h2>
+<form method="POST" action="{% url 'trailer:trailer_list' %}">
+    {% csrf_token %}
+    <select class="form-control mb-3" name="top_10_selection">
+        <option value="global">Opsi Top 10 Global (default)</option>
+        <option value="user_country">Opsi Top 10 Negara Pengguna</option>
+    </select>
+    <button class="btn btn-dark mb-3" type="submit">Tampilkan</button>
+</form>
+{% endif %}
+
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Peringkat</th>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Sinopsis Trailer</th>
+                    <th scope="col">URL Trailer</th>
+                    <th scope="col">Tanggal Rilis Trailer</th>
+                    <th scope="col">Total View 7 Hari Terakhir</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Tayangan</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Inception</td>
+                    <td>Watch the dream unfold in the mind-bending trailer.</td>
+                    <td>https://youtu.be/YoHD9XEInc0</td>
+                    <td>2010-07-16</td>
+                    <td>17,279,500</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Summertime Render</td>
+                    <td>Upon hearing of Ushio's death, Shinpei returns to his hometown of Wakayama City on Hitogashima and reunites with his childhood friend's family. The funeral goes smoothly, but under the surface something strange is brewing on the island. What mysteries await him on this secluded summer island?</td>
+                    <td>https://youtu.be/6ZQH6Ytsl0Q</td>
+                    <td>2021-10-13</td>
+                    <td>530,864</td>
+                  </tr>
+                {% for trailer in trailers %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ trailer.title }}</td>
+                    <td>{{ trailer.synopsis }}</td>
+                    <td>{{ trailer.trailer_url }}</td>
+                    <td><a href="{{ trailer.trailer_url }}">Tonton Trailer</a></td>
+                    <td>{{ trailer.release_date }}</td>
+                    <td>{{ trailer.total_views_last_7_days }}</td>
+                    {% if user.is_authenticated %}
+                    <td><a href="{% url 'trailer:detail' trailer.id %}" class="btn btn-dark">Tayangan</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2>Film</h2>
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Sinopsis Trailer</th>
+                    <th scope="col">URL Trailer</th>
+                    <th scope="col">Tanggal Rilis Trailer</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Tayangan</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Inception</td>
+                    <td>Watch the dream unfold in the mind-bending trailer.</td>
+                    <td>https://youtu.be/YoHD9XEInc0</td>
+                    <td>2010-07-16</td>
+                  </tr>
+                {% for film in films %}
+                <tr>
+                    <td>{{ film.title }}</td>
+                    <td>{{ film.synopsis }}</td>
+                    <td>{{ film.trailer_url }}</td>
+                    <td>{{ film.release_date }}</td>
+                    {% if user.is_authenticated %}
+                    <td><a href="{% url 'trailer:detail' film.id %}" class="btn btn-dark">Tayangan</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h2>Series</h2>
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Sinopsis Trailer</th>
+                    <th scope="col">URL Trailer</th>
+                    <th scope="col">Tanggal Rilis Trailer</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Tayangan</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Summertime Render</td>
+                    <td>Upon hearing of Ushio's death, Shinpei returns to his hometown of Wakayama City on Hitogashima and reunites with his childhood friend's family. The funeral goes smoothly, but under the surface something strange is brewing on the island. What mysteries await him on this secluded summer island?</td>
+                    <td>https://youtu.be/6ZQH6Ytsl0Q</td>
+                    <td>2021-10-13</td>
+                  </tr>
+                {% for serie in series %}
+                <tr>
+                    <td>{{ serie.title }}</td>
+                    <td>{{ serie.synopsis }}</td>
+                    <td>{{ serie.trailer_url }}</td>
+                    <td>{{ serie.release_date }}</td>
+                    {% if user.is_authenticated %}
+                    <td><a href="{% url 'trailer:detail' serie.id %}" class="btn btn-dark">Tayangan</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

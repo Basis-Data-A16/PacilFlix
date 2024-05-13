@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Series Detail{% endblock %}
+
+{% block content %}
+<h1>Series Detail</h1>
+<h2>Judul: Summertime Render</h2>
+<h3>Episode:</h3>
+<ul>
+    Currently not available
+</ul>
+<p>Sinopsis: Since the death of his parents, Shinpei Ajiro had lived with the Kofune family and their two daughters—Mio and Ushio. Although he then left his home island to continue his education in Tokyo, Shinpei returns after Ushio tragically drowns during the attempted rescue of a little girl. During the funeral, his best friend informs him about bruises found around Ushio's neck, casting doubt over the cause of her death.
+
+    Suspecting a murder has taken place, Shinpei reevaluates recent events, but strange incidents only continue to transpire. Disappearing people and other unexplainable occurrences lead Mio to recall an old folktale referring to entities called "Shadows," which may not be entirely fantasy. Supposedly, an encounter with one's Shadow foretells the person's impending demise.</p>
+<p>Tanggal Rilis: October 23, 2017 – February 1, 2021</p>
+<p>Total View: 5838384</p>
+<p>Rating Rata-Rata: 8.5</p>
+<h3>Genre:</h3>
+<ul>
+    Mystery
+</ul>
+<h3>Asal Negara: Jepang</h3>
+<h3>Pemain:</h3>
+<ul>
+    <li>Natsuki Hanae</li>
+    <li>Anna Nagase</li>
+    <li>Saho Shirasu</li>
+</ul>
+<h3>Penulis Skenario:</h3>
+<ul>
+	<li>Yasuki Tanaka</li>
+</ul>
+<h3>Sutradara: 	Ayumu Watanabe</h3>
+
+<!-- Bagian Ulasan -->
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <h2>Bagian Ulasan</h2>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="nama">Nama:</label>
+                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+            </div>
+            <div class="form-group">
+                <label for="deskripsi">Deskripsi Ulasan:</label>
+                <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
+        </form>
+        <hr>
+        {% if reviews %}
+        <h3>Daftar Ulasan:</h3>
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    <strong>{{ review.author }}</strong>: {{ review.content }} - Rating: {{ review.rating }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Belum ada ulasan untuk seri ini.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
