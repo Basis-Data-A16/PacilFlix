@@ -4,13 +4,13 @@
 
 {% block content %}
 <h2>Daftar Kontributor</h2>
-  
+
 <!-- Search Bar -->
-<form class="form-inline mb-3">
-  <input class="form-control mr-sm-2" type="search" placeholder="Cari kontributor" aria-label="Search">
+<form class="form-inline mb-3" method="GET">
+  <input class="form-control mr-sm-2" type="search" name="search" placeholder="Cari kontributor" aria-label="Search" value="{{ search_query }}">
   <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
 </form>
-  
+
 <div class="card shadow mt-3">
   <div class="card-body">
     <table class="table table-striped">
@@ -23,57 +23,53 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">John Doe</th>
-          <td>Pemain</td>
-          <td>Laki-laki</td>
-          <td>Indonesia</td>
-        </tr>
-        <tr>
-          <th scope="row">Jane Smith</th>
-          <td>Pemain</td>
-          <td>Perempuan</td>
-          <td>United States</td>
-        </tr>
-        <tr>
-          <th scope="row">Mohammed Rahman</th>
-          <td>Pemain</td>
-          <td>Laki-laki</td>
-          <td>Bangladesh</td>
-        </tr>
-        <tr>
-          <th scope="row">Muhammad Ali</th>
-          <td>Penulis Skenario</td>
-          <td>Laki-laki</td>
-          <td>Pakistan</td>
-        </tr>
-        <tr>
-          <th scope="row">Emma Wilson</th>
-          <td>Penulis Skenario</td>
-          <td>Perempuan</td>
-          <td>Canada</td>
-        </tr>
-        <tr>
-          <th scope="row">Joaquin Fernandez</th>
-          <td>Penulis Skenario</td>
-          <td>Laki-laki</td>
-          <td>Mexico</td>
-        </tr>
+        {% if page_obj.object_list %}
+          {% for kontributor in page_obj.object_list %}
+          <tr>
+            <th scope="row">{{ kontributor.nama }}</th>
+            <td>{{ kontributor.tipe }}</td>
+            <td>{{ kontributor.jenis_kelamin }}</td>
+            <td>{{ kontributor.kewarganegaraan }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-center">
+              Tidak ada kontributor yang ditemukan. Silakan cari dengan tipe 'Sutradara', 'Pemain', atau 'Penulis Skenario'.
+            </td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>
   <div class="card-footer">
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}">Previous</a>
+        </li>
+        {% else %}
         <li class="page-item disabled">
           <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">Next</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+          <a class="page-link" href="?page={{ num }}&search={{ search_query }}">{{ num }}</a>
         </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+        </li>
+        {% endif %}
       </ul>
     </nav>
   </div>
