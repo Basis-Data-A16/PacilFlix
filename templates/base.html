@@ -34,10 +34,10 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Daftar Tayangan</a>
-            <a class="dropdown-item" href="#">Daftar Kontributor</a>
+            <a class="dropdown-item" href="{% url 'kontributor:kontributor' %}">Daftar Kontributor</a>
             <a class="dropdown-item" href="#">Kelola Daftar Favorit</a>
             <a class="dropdown-item" href="#">Kelola Daftar Unduhan</a>
-            <a class="dropdown-item" href="#">Kelola Langganan</a>
+            <a class="dropdown-item" href="{% url 'langganan:langganan' %}">Kelola Langganan</a>
           </div>
         </li>
         {% else %}

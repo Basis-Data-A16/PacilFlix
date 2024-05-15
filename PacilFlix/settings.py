@@ -90,7 +90,8 @@ DATABASES = {
     'HOST': getenv('PGHOST'),
     'PORT': getenv('PGPORT', 5432),
     'OPTIONS': {
-      'sslmode': 'require',
+        'sslmode': 'require' if getenv('USE_SSL', 'false').lower() == 'true' else 'prefer',
+        'options': '-c search_path=pacilflix'
     },
   }
 }
@@ -138,3 +139,4 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_URL = '/form-login/'
