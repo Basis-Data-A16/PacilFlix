@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <h2 class="card-title text-center">LOGIN FORM</h2>
 
-                    <form method="POST">
+                    <form method="POST" action="{% url 'authentication:form-login' %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="username">Username:</label>
@@ -35,4 +35,11 @@
         height: 100vh;
     }
 </style>
+
+{% if login_failed %}
+<script>
+    alert('Login failed: Username or password is incorrect.');
+</script>
+{% endif %}
+
 {% endblock %}
