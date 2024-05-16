@@ -13,8 +13,8 @@ def langganan(request):
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT p.nama, p.harga, p.resolusi_layar, t.start_date_time, t.end_date_time, t.metode_pembayaran, t.timestamp_pembayaran
-            FROM pacilflix.transaction t
-            JOIN pacilflix.paket p ON t.nama_paket = p.nama
+            FROM transaction t
+            JOIN paket p ON t.nama_paket = p.nama
             WHERE t.username = %s AND t.end_date_time > CURRENT_DATE
             ORDER BY t.start_date_time DESC
             LIMIT 1
@@ -25,7 +25,7 @@ def langganan(request):
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT nama, harga, resolusi_layar
-            FROM pacilflix.paket
+            FROM paket
         """)
         packages = cursor.fetchall()
 
@@ -54,7 +54,7 @@ def bayar(request):
         # Memasukkan transaksi baru atau memperbarui transaksi yang ada
         with connection.cursor() as cursor:
             cursor.execute("""
-                INSERT INTO pacilflix.transaction (username, start_date_time, end_date_time, nama_paket, metode_pembayaran, timestamp_pembayaran)
+                INSERT INTO transaction (username, start_date_time, end_date_time, nama_paket, metode_pembayaran, timestamp_pembayaran)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 ON CONFLICT (username, start_date_time) DO UPDATE
                 SET end_date_time = %s, nama_paket = %s, metode_pembayaran = %s, timestamp_pembayaran = %s
@@ -67,7 +67,7 @@ def bayar(request):
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT nama, harga, resolusi_layar
-                FROM pacilflix.paket
+                FROM paket
                 WHERE nama = %s
             """, [package_name])
             package = cursor.fetchone()

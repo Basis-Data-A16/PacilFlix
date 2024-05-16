@@ -10,16 +10,16 @@ def kontributor_list(request):
                STRING_AGG(tipe, ', ') AS tipe
         FROM (
             SELECT nama, jenis_kelamin, kewarganegaraan, 'Pemain' AS tipe
-            FROM pacilflix.contributors
-            JOIN pacilflix.pemain ON contributors.id = pemain.id
+            FROM contributors
+            JOIN pemain ON contributors.id = pemain.id
             UNION ALL
             SELECT nama, jenis_kelamin, kewarganegaraan, 'Penulis Skenario' AS tipe
-            FROM pacilflix.contributors
-            JOIN pacilflix.penulis_skenario ON contributors.id = penulis_skenario.id
+            FROM contributors
+            JOIN penulis_skenario ON contributors.id = penulis_skenario.id
             UNION ALL
             SELECT nama, jenis_kelamin, kewarganegaraan, 'Sutradara' AS tipe
-            FROM pacilflix.contributors
-            JOIN pacilflix.sutradara ON contributors.id = sutradara.id
+            FROM contributors
+            JOIN sutradara ON contributors.id = sutradara.id
         ) AS subquery
     """
 
