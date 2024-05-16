@@ -6,3 +6,4 @@ requests
 urllib3
 pycountry
 python-dotenv
+dj_database_url
