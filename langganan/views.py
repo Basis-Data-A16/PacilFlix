@@ -1,15 +1,14 @@
 from django.shortcuts import render, redirect
 from django.db import connection
-from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.http import HttpResponseBadRequest
 
-# @login_required
 def langganan(request):
-    # Mendapatkan username dari pengguna yang sedang login
-    username = request.COOKIES.get('username')
+    if not request.session.get('is_authenticated'):
+        return redirect('authentication:form-login')
 
-    # Mendapatkan informasi paket aktif
+    username = request.session.get('username')
+
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT p.nama, p.harga, p.resolusi_layar, t.start_date_time, t.end_date_time, t.metode_pembayaran, t.timestamp_pembayaran
@@ -36,18 +35,18 @@ def langganan(request):
 
     return render(request, 'kelola_langganan.html', context)
 
-# @login_required
 def bayar(request):
+    if not request.session.get('is_authenticated'):
+        return redirect('authentication:form-login')
+
     if request.method == "POST":
-        username = request.COOKIES.get('username')
+        username = request.session.get('username')
         package_name = request.POST.get('package_name')
         metode_pembayaran = request.POST.get('metode_pembayaran')
         
-        # Validasi input
         if not package_name or not metode_pembayaran:
             return HttpResponseBadRequest("Nama paket dan metode pembayaran diperlukan.")
 
-        # Menentukan tanggal mulai dan akhir untuk langganan baru
         start_date = datetime.now().date()
         end_date = start_date + timedelta(days=30)
 

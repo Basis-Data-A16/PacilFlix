@@ -132,3 +132,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/form-login/'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://pacilflix-a16.up.railway.app'
+]
+
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

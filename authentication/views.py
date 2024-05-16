@@ -17,13 +17,11 @@ def login(request):
             username = data[0][0]
             negara_asal = data[0][1]
 
-            request = HttpResponseRedirect(reverse('trailer:search_trailer'))
-            request.set_cookie('username', username)
-            request.set_cookie('negara_asal', negara_asal)
-            request.set_cookie('is_authenticated', True)
+            request.session['username'] = username
+            request.session['negara_asal'] = negara_asal
+            request.session['is_authenticated'] = True
 
-            return request
-
+            return HttpResponseRedirect(reverse('trailer:search_trailer'))
         else:
             return render(request, 'form_login.html', {'login_failed': True})
     else:
@@ -61,8 +59,5 @@ def test(request):
     return render(request, "test.html")
 
 def logout(request):
-    request = HttpResponseRedirect(reverse('authentication:form-login'))
-    request.delete_cookie('username')
-    request.delete_cookie('negara_asal')
-    request.delete_cookie('is_authenticated')
-    return request
+    request.session.flush()
+    return HttpResponseRedirect(reverse('authentication:form-login'))

@@ -1,8 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.db import connection
+from django.urls import reverse
 
 def kontributor_list(request):
+    if not request.session.get('is_authenticated'):
+        return redirect(reverse('authentication:form-login'))
+    
     search_query = request.GET.get('search', '')
 
     base_query = """
