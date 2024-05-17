@@ -15,7 +15,7 @@
             <p class="card-text">Tanggal Rilis: {{ film.release_date }}</p>
             <p class="card-text">Total View: {{ film.total_views }}</p>
             <p class="card-text">Rating Rata-Rata: {{ film.average_rating }}</p>
-            <p class="card-text">URL Film: <a href="{{ film.trailer_url }}">Tonton Trailer</a></p>
+            <p class="card-text">URL Film: <a href="{{ film.url_video_film }}">Tonton Trailer</a></p>
             <h3>Genre:</h3>
             <ul>
                 {% for genre in film.genres %}

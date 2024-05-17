@@ -85,6 +85,7 @@ def trailer_list(request):
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT
+                t.id,
                 t.judul,
                 t.sinopsis,
                 t.url_video_trailer AS trailer_url,
@@ -100,6 +101,7 @@ def trailer_list(request):
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT
+                t.id,
                 t.judul,
                 t.sinopsis,
                 t.url_video_trailer AS trailer_url,
@@ -113,8 +115,8 @@ def trailer_list(request):
                 
     # Mapping data ke dictionary untuk dikirim ke template
     top_10 = [{'peringkat': i+1, 'judul': row[1], 'view_count': row[2]} for i, row in enumerate(top_10_data)]
-    films = [{'judul': row[0], 'sinopsis': row[1], 'trailer_url': row[2], 'release_date': row[3]} for row in film_data]
-    series = [{'judul': row[0], 'sinopsis': row[1], 'trailer_url': row[2], 'release_date': row[3]} for row in series_data]
+    films = [{'id': row[0], 'judul': row[1], 'sinopsis': row[2], 'trailer_url': row[3], 'release_date': row[4]} for row in film_data]
+    series = [{'id': row[0], 'judul': row[1], 'sinopsis': row[2], 'trailer_url': row[3], 'release_date': row[4]} for row in series_data]
     
     context = {
         'top_10': top_10,
@@ -195,9 +197,18 @@ def search_trailer(request):
 def film_detail(request, film_id):
     # Fetch film data from the database
     with connection.cursor() as cursor:
-        cursor.execute("SELECT url_video_film, release_date_film, durasi_film FROM FILM WHERE id_tayangan = %s", [str(film_id)])
-
-        film_data = cursor.fetchone()
+        cursor.execute("""
+            SELECT
+                t.judul,
+                t.sinopsis,
+                t.url_video_trailer AS trailer_url,
+                t.release_date_trailer AS release_date
+            FROM
+                tayangan t
+            INNER JOIN
+                film f ON t.id = f.id_tayangan
+        """)
+        film_data = cursor.fetchall()
 
         # Fetch reviews for the film
         cursor.execute("SELECT rating FROM ULASAN WHERE id_tayangan = %s", [str(film_id)])
@@ -206,31 +217,27 @@ def film_detail(request, film_id):
         # Calculate total_views (jumlah entri di tabel RIWAYAT_NONTON)
         cursor.execute("SELECT COUNT(*) FROM RIWAYAT_NONTON WHERE id_tayangan = %s", [str(film_id)])
         total_views_data = cursor.fetchone()
-
-    # Check if film data exists
-    if film_data is None:
-        raise Http404("Film not found")
-
+    
+    films = [{'judul': row[0], 'sinopsis': row[1], 'trailer_url': row[2], 'release_date': row[3]} for row in film_data]
+    
     # Calculate total_views and average_rating
     total_views = total_views_data[0] if total_views_data else 0
     average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
 
     # Prepare film object
-    film = {
-        'url_video_film': film_data[0],
-        'release_date_film': film_data[1],
-        'durasi_film': film_data[2],
+    context = {
+        'film' : films,
         'total_views': total_views,
         'average_rating': average_rating,
         'reviews': [{'rating': review[0]} for review in reviews_data]
     }
 
-    return render(request, 'film_detail.html', {'film': film})
+    return render(request, 'film_detail.html', {'film': context})
 
 def series_detail(request, series_id):
     # Fetch series data from the database
     with connection.cursor() as cursor:
-        cursor.execute("SELECT judul, sinopsis, release_date FROM tayangan WHERE id = %s", [str(series_id)])
+        cursor.execute("SELECT judul, sinopsis, release_date_trailer FROM tayangan WHERE id = %s", [str(series_id)])
         series_data = cursor.fetchone()
 
         cursor.execute("SELECT sub_judul FROM episode WHERE id_series = %s", [str(series_id)])
