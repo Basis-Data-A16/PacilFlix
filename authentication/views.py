@@ -21,10 +21,12 @@ def login(request):
             request.session['negara_asal'] = negara_asal
             request.session['is_authenticated'] = True
 
-            return HttpResponseRedirect(reverse('trailer:search_trailer'))
+            return HttpResponseRedirect(reverse('trailer:trailer_list'))
         else:
             return render(request, 'form_login.html', {'login_failed': True})
     else:
+        if request.session.get('is_authenticated'):
+            return HttpResponseRedirect(reverse('trailer:trailer_list'))
         return render(request, 'form_login.html')
 
 @csrf_exempt
@@ -50,9 +52,13 @@ def register(request):
         return render(request, 'form_register.html')
 
 def login_register(request):
+    if request.session.get('is_authenticated'):
+        return HttpResponseRedirect(reverse('trailer:trailer_list'))
     return render(request, 'login_register.html')
 
 def form_register(request):
+    if request.session.get('is_authenticated'):
+        return HttpResponseRedirect(reverse('trailer:trailer_list'))
     return render(request, 'form_register.html')
 
 def test(request):
