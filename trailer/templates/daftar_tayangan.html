@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+
+{% block title %}Daftar Tayangan{% endblock %}
+
+{% block content %}
+<h1>DAFTAR TAYANGAN</h1>
+<form class="form-inline mb-3" method="GET" action="{% url 'trailer:search_trailer' %}">
+    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Pencarian Tayangan berdasarkan judul" aria-label="Search">
+    <button class="btn btn-dark my-2 my-sm-0" type="submit">Cari</button>
+</form>
+
+<div class="top-10">
+    <h2>10 Tayangan Terbaik Minggu Ini</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Peringkat</th>
+                <th>Judul</th>
+                <th>Total View 7 Hari Terakhir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tayangan in top_10 %}
+            <tr>
+                <td>{{ tayangan.peringkat }}</td>
+                <td>{{ tayangan.judul }}</td>
+                <td>{{ tayangan.view_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if request.session.is_authenticated %}
+    <form method="POST" action="{% url 'trailer:trailer_list' %}">
+        {% csrf_token %}
+        <button class="btn {% if top_10_selection == 'global' %} btn-danger {% else %} btn-secondary {% endif %} mb-3" type="submit" name="top_10_selection" value="global">Top Global</button>
+    </form>
+    <form method="POST" action="{% url 'trailer:trailer_list' %}">
+        {% csrf_token %}
+        <button class="btn {% if top_10_selection == 'asal_negara' %} btn-danger {% else %} btn-secondary {% endif %} mb-3" type="submit" name="top_10_selection" value="asal_negara">Top Lokal</button>
+    </form>
+    {% endif %}
+</div>
+
+<div class="film">
+    <h2>Film</h2>
+    <div class="grid-wrapper">
+        {% for film in films %}
+        <div class="card" data-id="{{ film.id }}">
+            <img src="http://img.youtube.com/vi/{{ film.trailer_url|youtube_id }}/hqdefault.jpg" class="card-img-top" alt="{{ film.judul }} thumbnail">
+            <div class="card-body">
+                <h5 class="card-title">{{ film.judul }}</h5>
+                <p class="card-text">{{ film.sinopsis }}</p>
+                <p class="card-text">{{ film.release_date }}</p>
+                <a href="{{ film.trailer_url }}" class="btn btn-primary">Lihat Trailer</a>
+                {% if request.session.is_authenticated %}
+                <a href="{% url 'trailer:film_detail' %}" class="btn btn-dark">Tayangan</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="series">
+    <h2>Series</h2>
+    <div class="grid-wrapper">
+        {% for serie in series %}
+        <div class="card" data-id="{{ serie.id }}">
+            <img src="http://img.youtube.com/vi/{{ serie.trailer_url|youtube_id }}/hqdefault.jpg" class="card-img-top" alt="{{ serie.judul }} thumbnail">
+            <div class="card-body">
+                <h5 class="card-title">{{ serie.judul }}</h5>
+                <p class="card-text">{{ serie.sinopsis }}</p>
+                <p class="card-text">{{ serie.release_date }}</p>
+                <a href="{{ serie.trailer_url }}" class="btn btn-primary">Lihat Trailer</a>
+                {% if request.session.is_authenticated %}
+                <a href="{% url 'trailer:series_detail' %}" class="btn btn-dark">Tayangan</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .grid-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .grid-wrapper .card {
+        cursor: pointer;
+        transition: transform 0.3s, width 0.3s;
+    }
+
+    .grid-wrapper .card:hover {
+        transform: scale(1.1);
+    }
+
+    .grid-wrapper .card:hover .card-text {
+        display: block;
+    }
+
+    .grid-wrapper .card .card-text {
+        display: none;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+{% endblock %}

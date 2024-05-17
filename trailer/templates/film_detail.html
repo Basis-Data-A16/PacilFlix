@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Film Detail{% endblock %}
+
+{% block content %}
+<h1>Film Detail</h1>
+<h2>Judul: Inception</h2>
+<p>Sinopsis: Dom Cobb (Leonardo DiCaprio) is a thief with the rare ability to enter people's dreams and steal their secrets from their subconscious. His skill has made him a hot commodity in the world of corporate espionage but has also cost him everything he loves. Cobb gets a chance at redemption when he is offered a seemingly impossible task: Plant an idea in someone's mind. If he succeeds, it will be the perfect crime, but a dangerous enemy anticipates Cobb's every move.</p>
+<p>Durasi Film: 2h 28m</p>
+<p>Tanggal Rilis: 2010-07-16</p>
+<p>Total View: 56483684</p>
+<p>Rating Rata-Rata: 8.8</p>
+<p>URL Film: <a href="https://youtu.be/YoHD9XEInc0">Tonton Trailer</a></p>
+<h3>Genre:</h3>
+<ul>
+    Action, Sci-fi
+</ul>
+<h3>Asal Negara: Inggris, Amerika Serikat</h3>
+<h3>Pemain:</h3>
+<ul>
+    <li>Leonardo DiCaprio</li>
+    <li>Ken Watanabe</li>
+    <li>Joseph Gordon-Levitt</li>
+    <li>Marion Cotillard</li>
+    <li>Elliot Page</li>
+    <li>Tom Hardy</li>
+    <li>Cillian Murphy</li>
+    <li>Tom Berenger</li>
+    <li>Michael Caine</li>
+</ul>
+<h3>Penulis Skenario:</h3>
+<ul>
+	<li>Christopher Nolan</li>
+</ul>
+<h3>Sutradara: 	Christopher Nolan</h3>
+
+<!-- Bagian Ulasan -->
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <h2>Bagian Ulasan</h2>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="nama">Nama:</label>
+                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+            </div>
+            <div class="form-group">
+                <label for="deskripsi">Deskripsi Ulasan:</label>
+                <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
+        </form>
+        <hr>
+        <h3>Daftar Ulasan:</h3>
+        <div class="ulasan">
+            <p><strong>Aak</strong>: What a movie! - Rating: 8.8</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

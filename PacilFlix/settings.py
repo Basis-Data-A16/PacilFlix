@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+import dj_database_url
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,7 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'kontributor',
-    'langganan'
+    'langganan',
+    'trailer',
+    'trailer.templatetags.custom_filter'
 ]
 
 MIDDLEWARE = [
@@ -77,13 +84,10 @@ WSGI_APPLICATION = 'PacilFlix.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DATABASE_URL = 'postgresql://database_owner:YTW1Nubc4JHo@ep-green-shadow-a1u432lj.ap-southeast-1.aws.neon.tech/database?sslmode=require'
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -128,3 +132,12 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_URL = '/form-login/'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://pacilflix-a16.up.railway.app'
+]
+
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
