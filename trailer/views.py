@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.db import connection
 
@@ -191,11 +192,86 @@ def search_trailer(request):
     return render(request, 'search_tayangan.html', context)
 
 
-def film_detail(request):
-    return render(request, 'film_detail.html')
+def film_detail(request, film_id):
+    # Fetch film data from the database
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT url_video_film, release_date_film, durasi_film FROM FILM WHERE id_tayangan = %s", [str(film_id)])
 
-def series_detail(request):
-    return render(request, 'series_detail.html')
+        film_data = cursor.fetchone()
 
-def episode_detail(request):
-    return render(request, 'episode_detail.html')
+        # Fetch reviews for the film
+        cursor.execute("SELECT rating FROM ULASAN WHERE id_tayangan = %s", [str(film_id)])
+        reviews_data = cursor.fetchall()
+
+        # Calculate total_views (jumlah entri di tabel RIWAYAT_NONTON)
+        cursor.execute("SELECT COUNT(*) FROM RIWAYAT_NONTON WHERE id_tayangan = %s", [str(film_id)])
+        total_views_data = cursor.fetchone()
+
+    # Check if film data exists
+    if film_data is None:
+        raise Http404("Film not found")
+
+    # Calculate total_views and average_rating
+    total_views = total_views_data[0] if total_views_data else 0
+    average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
+
+    # Prepare film object
+    film = {
+        'url_video_film': film_data[0],
+        'release_date_film': film_data[1],
+        'durasi_film': film_data[2],
+        'total_views': total_views,
+        'average_rating': average_rating,
+        'reviews': [{'rating': review[0]} for review in reviews_data]
+    }
+
+    return render(request, 'film_detail.html', {'film': film})
+
+def series_detail(request, series_id):
+    # Fetch series data from the database
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT judul, sinopsis, release_date FROM tayangan WHERE id = %s", [str(series_id)])
+        series_data = cursor.fetchone()
+
+        cursor.execute("SELECT sub_judul FROM episode WHERE id_series = %s", [str(series_id)])
+        episodes_data = cursor.fetchall()
+
+    # Check if series data exists
+    if series_data is None:
+        raise Http404("Series not found")
+
+    # Prepare series object
+    series = {
+        'judul': series_data[0],
+        'sinopsis': series_data[1],
+        'release_date': series_data[2],
+        'episodes': [episode[0] for episode in episodes_data]
+    }
+
+    return render(request, 'series_detail.html', {'series': series})
+
+
+def episode_detail(request, episode_id):
+    # Fetch episode data from the database
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT sub_judul, sinopsis, durasi, release_date FROM episode WHERE id = %s", [str(episode_id)])
+        episode_data = cursor.fetchone()
+
+        # Fetch reviews for the episode
+        cursor.execute("SELECT deskripsi, rating FROM ulasan WHERE id_episode = %s", [str(episode_id)])
+        reviews_data = cursor.fetchall()
+
+    # Check if episode data exists
+    if episode_data is None:
+        raise Http404("Episode not found")
+
+    # Prepare episode object
+    episode = {
+        'title': episode_data[0],
+        'sinopsis': episode_data[1],
+        'duration': episode_data[2],
+        'release_date': episode_data[3],
+        'reviews': [{'content': review[0], 'rating': review[1]} for review in reviews_data]
+    }
+
+    return render(request, 'episode_detail.html', {'episode': episode})
