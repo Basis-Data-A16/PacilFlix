@@ -27,10 +27,21 @@ def langganan(request):
             FROM paket
         """)
         packages = cursor.fetchall()
+    # Mendapatkan riwayat transaksi pengguna
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.nama, p.harga, p.resolusi_layar, t.start_date_time, t.end_date_time, t.metode_pembayaran, t.timestamp_pembayaran
+            FROM transaction t
+            JOIN paket p ON t.nama_paket = p.nama
+            WHERE t.username = %s 
+            ORDER BY t.start_date_time DESC
+        """, [username])
+        transaction_history = cursor.fetchall()
 
     context = {
         'current_subscription': current_subscription,
         'packages': packages,
+        'transaction_history': transaction_history
     }
 
     return render(request, 'kelola_langganan.html', context)
@@ -43,21 +54,16 @@ def bayar(request):
         username = request.session.get('username')
         package_name = request.POST.get('package_name')
         metode_pembayaran = request.POST.get('metode_pembayaran')
-        
-        if not package_name or not metode_pembayaran:
-            return HttpResponseBadRequest("Nama paket dan metode pembayaran diperlukan.")
 
         start_date = datetime.now().date()
         end_date = start_date + timedelta(days=30)
 
-        # Memasukkan transaksi baru atau memperbarui transaksi yang ada
+        # Memasukkan transaksi baru
         with connection.cursor() as cursor:
             cursor.execute("""
                 INSERT INTO transaction (username, start_date_time, end_date_time, nama_paket, metode_pembayaran, timestamp_pembayaran)
                 VALUES (%s, %s, %s, %s, %s, %s)
-                ON CONFLICT (username, start_date_time) DO UPDATE
-                SET end_date_time = %s, nama_paket = %s, metode_pembayaran = %s, timestamp_pembayaran = %s
-            """, [username, start_date, end_date, package_name, metode_pembayaran, datetime.now(), end_date, package_name, metode_pembayaran, datetime.now()])
+            """, [username, start_date, end_date, package_name, metode_pembayaran, datetime.now()])
 
         return redirect('langganan:langganan')
     else:
