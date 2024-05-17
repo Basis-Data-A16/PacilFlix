@@ -17,6 +17,9 @@
             <tr>
                 <th>Peringkat</th>
                 <th>Judul</th>
+                <th>Sinopsis</th>
+                <th>Trailer URL</th>
+                <th>Tanggal Rilis</th>
                 <th>Total View 7 Hari Terakhir</th>
             </tr>
         </thead>
@@ -25,6 +28,9 @@
             <tr>
                 <td>{{ tayangan.peringkat }}</td>
                 <td>{{ tayangan.judul }}</td>
+                <td>{{ tayangan.sinopsis }}</td>
+                <td>{{ tayangan.trailer_url }}</td>
+                <td>{{ tayangan.release_date }}</td>
                 <td>{{ tayangan.view_count }}</td>
             </tr>
             {% endfor %}

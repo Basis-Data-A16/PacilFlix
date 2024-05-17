@@ -28,6 +28,9 @@ def trailer_list(request):
             SELECT
                 t.id AS id_tayangan,
                 t.judul,
+                t.sinopsis AS sinopsis_trailer,
+                t.url_video_trailer AS trailer_url,
+                t.release_date_trailer,
                 CASE
                     WHEN f.id_tayangan IS NOT NULL THEN f.durasi_film
                     WHEN e.id_series IS NOT NULL THEN e.durasi
@@ -57,17 +60,23 @@ def trailer_list(request):
             SELECT
                 id_tayangan,
                 judul,
+                sinopsis_trailer,
+                trailer_url,
+                release_date_trailer,
                 COUNT(*) AS view_count
             FROM
                 tayangan_durasi
             WHERE
                 durasi_nonton >= 0.7 * durasi_tayangan
             GROUP BY
-                id_tayangan, judul
+                id_tayangan, judul, sinopsis_trailer, trailer_url, release_date_trailer
         )
         SELECT
             id_tayangan,
             judul,
+            sinopsis_trailer,
+            trailer_url,
+            release_date_trailer,
             view_count
         FROM
             view_count
@@ -111,7 +120,8 @@ def trailer_list(request):
         series_data = cursor.fetchall()
                 
     # Mapping data ke dictionary untuk dikirim ke template
-    top_10 = [{'peringkat': i+1, 'judul': row[1], 'view_count': row[2]} for i, row in enumerate(top_10_data)]
+    top_10 = [{'peringkat': i+1, 'judul': row[1], 'sinopsis': row[2], 'trailer_url': row[3],
+               'release_date': row[4], 'view_count': row[5]} for i, row in enumerate(top_10_data)]
     films = [{'judul': row[0], 'sinopsis': row[1], 'trailer_url': row[2], 'release_date': row[3]} for row in film_data]
     series = [{'judul': row[0], 'sinopsis': row[1], 'trailer_url': row[2], 'release_date': row[3]} for row in series_data]
     
