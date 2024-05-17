@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'authentication',
     'kontributor',
     'langganan',
-    'trailer'
+    'trailer',
+    'trailer.templatetags.custom_filter'
 ]
 
 MIDDLEWARE = [
