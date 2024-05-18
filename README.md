@@ -14,8 +14,6 @@ Here are some of the project's best features:
 *   R Trailer: Semua pengguna termasuk yang belum login dapat melihat trailer film dan acara TV.
 *   R Tayangan: Pengguna yang sudah login dapat menonton film dan acara TV penuh.
 *   CR Ulasan: Pengguna yang sudah login dapat membuat (Create) dan membaca (Read) ulasan, serta memperbarui (Update) ulasan mereka sendiri.
-*   RD Daftar Unduhan: Pengguna yang sudah login dapat melihat (Read) dan menghapus (Delete) daftar unduhan mereka.
-*   RD Daftar Favorit: Pengguna yang sudah login dapat melihat (Read) dan menghapus (Delete) daftar favorit mereka.
 *   R Daftar Kontributor: Pengguna yang sudah login dapat melihat daftar kontributor aplikasi.
 *   CRU Langganan: Pengguna yang sudah login dapat membuat (Create), membaca (Read), dan memperbarui (Update) langganan mereka.
 
