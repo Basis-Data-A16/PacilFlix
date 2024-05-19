@@ -11,6 +11,20 @@
         <div class="card-body">
             <h5 class="card-title">Judul Series: {{ episode.series_judul }}</h5>
             <h5 class="card-title">Sub-judul Episode: {{ episode.sub_judul }}</h5>
+            <div class="slider">
+                <form id="progressForm" action="" method="post">
+                    {% csrf_token %}  
+                    <input type="hidden" name="id" value="{{ episode.id }}">
+                    <input type="hidden" name="tipe" value="series">
+                    <input type="hidden" name="subjudul" value="{{ episode.sub_judul }}">
+                    <input type="hidden" name="durasi" value="{{ episode.durasi }}">
+                    <label for="progress" class="form-label"><b>Progress:</b></label>
+                    <input type="range" class="form-range" name="progress" id="progress">
+                </form>
+              </div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-primary mb-2" id="btnTonton" onclick="">Tonton</button>
+            </div>
             <p class="card-text">Sinopsis: {{ episode.sinopsis }}</p>
             <p class="card-text">Durasi: {{ episode.durasi }} menit</p>
             <p class="card-text">Tanggal Rilis: {{ episode.release_date }}</p>

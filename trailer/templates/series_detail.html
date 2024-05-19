@@ -22,6 +22,12 @@
             {% else %}
                 <p>Currently not available</p>
             {% endif %}
+            <h2>
+                <button class="btn btn-primary mb-2" id="btnFavorit" data-bs-toggle="modal" data-bs-target="#favoriteListModal" data-judul_tayangan="">Jadikan Favorit</button>
+            </h2>
+            <h2>
+                <a href=""><button class="btn btn-primary mb-2" id="btnUnduh" data-bs-toggle="modal" data-bs-target="#downloadModal" data-id= "{{ series.id }}">Unduh</button></a>
+            </h2>
             <p>Sinopsis: {{ series.sinopsis }}</p>
             <p>Total View: {{ series.total_views }}</p>
             <p>Rating Rata-Rata: {{ series.average_rating }}</p>
