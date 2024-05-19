@@ -10,6 +10,27 @@
         <img src="http://img.youtube.com/vi/{{ film.url_video_trailer|youtube_id }}/hqdefault.jpg" class="card-img-top" alt="{{ film.judul }} thumbnail">
         <div class="card-body">
             <h5 class="card-title">{{ film.judul }}</h5>
+            <div class="slider">
+                <form id="progressForm" action="" method="post">
+                    {% csrf_token %}  
+                    <input type="hidden" name="id" value="{{ film.id }}">
+                    <input type="hidden" name="tipe" value="film">
+                    <input type="hidden" name="durasi" value="{{ film.durasi_film }}">
+                    <label for="progress" class="form-label"><b>Progress:</b></label>
+                    <input type="range" class="form-range" name="progress" id="progress">
+                </form>
+              </div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-primary mb-2" id="btnTonton" onclick="">Tonton</button>
+            </div>
+            <h2>
+                <a href="">
+                    <button class="btn btn-primary mb-2" id="btnUnduh" data-bs-toggle="modal" data-bs-target="#downloadModal" data-id= "{{ film.id }}">Unduh</button>
+                </a>
+            </h2>
+            <h2>
+                <button class="btn btn-primary mb-2" id="btnFavorit" data-bs-toggle="modal" data-bs-target="#favoriteListModal">Jadikan Favorit</button>
+            </h2>
             <p class="card-text">{{ film.sinopsis }}</p>
             <p class="card-text">Durasi Film: {{ film.durasi_film }} menit</p>
             <p class="card-text">Tanggal Rilis: {{ film.release_date }}</p>
@@ -41,6 +62,49 @@
                     <li>{{ director }}</li>
                 {% endfor %}
             </ul>
+        </div>
+    </div>
+
+    <div class="modal fade" id="favoriteListModal" tabindex="-1" aria-labelledby="favoriteListModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="favoriteListModalLabelTitle">Modal Daftar Favorit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select mb-3" id="dropdown-favorite">
+                        <option value="select-daftar-favorit">Judul Daftar Favorit: </option>
+                        {% for judul_daftar in list_daftar_favorit %}
+                        <option value=""></option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <a id="link_add_favorite" href="#">
+                        <button type="button" class="btn btn-primary" id="button_add_favorite" data-bs-dismiss="modal">Tambah</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="downloadModalLabelTitle">Berhasil Ditambah ke Daftar Unduhan!</h1>
+                </div>
+                <div class="modal-body" id="downloadModalBody">
+                    <p>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <a href="" class="text-white hover:text-gray-300 me-2">
+                        <button type="button" class="btn btn-primary mb-2">Daftar Unduhan</button>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
