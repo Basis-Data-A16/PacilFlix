@@ -1,36 +1,45 @@
 {% extends 'base.html' %}
+{% load custom_filter %}
 
 {% block title %}Episode Detail{% endblock %}
 
 {% block content %}
-<h1>Episode Detail</h1>
-<h2>Judul: "Goodbye, Summer Days"</h2>
-<h3>Sub Judul: "Sayonara Natsu no Hi"</h3>
-<p>Sinopsis: Shinpei Ajiro returns to Hitogashima for the first time in two years to reconnect with his old life. In Hitogashima, there is a legend about people who see their own shadow and later die.</p>
-<p>Durasi Episode: 23 menit</p>
-<p>Tanggal Rilis: April 15, 2022</p>
-<p>URL Episode: Currently unavailable</p>
-
-<!-- Bagian Ulasan -->
-<div class="card shadow mt-3">
-    <div class="card-body">
-        <h2>Bagian Ulasan</h2>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi Ulasan:</label>
-                <input type="text" class="form-control" id="deskripsi" placeholder="Masukkan deskripsi ulasan Anda" required>
+<div class="container">
+    <h1>Episode Detail</h1>
+    {% if episode %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Judul Series: {{ episode.series_judul }}</h5>
+            <h5 class="card-title">Sub-judul Episode: {{ episode.sub_judul }}</h5>
+            <div class="slider">
+                <form id="progressForm" action="" method="post">
+                    {% csrf_token %}  
+                    <input type="hidden" name="id" value="{{ episode.id }}">
+                    <input type="hidden" name="tipe" value="series">
+                    <input type="hidden" name="subjudul" value="{{ episode.sub_judul }}">
+                    <input type="hidden" name="durasi" value="{{ episode.durasi }}">
+                    <label for="progress" class="form-label"><b>Progress:</b></label>
+                    <input type="range" class="form-range" name="progress" id="progress">
+                </form>
+              </div>
+              <div class="btn-group" role="group">
+                <button class="btn btn-primary mb-2" id="btnTonton" onclick="">Tonton</button>
             </div>
-            <div class="form-group">
-                <label for="rating">Rating:</label>
-                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-<p></p>
-        <h3>Daftar Ulasan:</h3>
-        <ul>
-            <li>Ga sabar episode 2!!! - 8.4</li>
-        </ul>
+            <p class="card-text">Sinopsis: {{ episode.sinopsis }}</p>
+            <p class="card-text">Durasi: {{ episode.durasi }} menit</p>
+            <p class="card-text">Tanggal Rilis: {{ episode.release_date }}</p>
+            <p class="card-text">URL: <a href="{{ episode.url_video }}">Tonton</a></p>
+        </div>
     </div>
+
+    <h3>Episode Lainnya:</h3>
+    <div class="list-group">
+        {% for other_episode in other_episodes %}
+            <a href="" class="list-group-item list-group-item-action">{{ other_episode.sub_judul }}</a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Episode tidak ditemukan.</p>
+    {% endif %}
 </div>
 {% endblock %}
