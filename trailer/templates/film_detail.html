@@ -49,6 +49,7 @@
         <div class="card-body">
             <h2>Bagian Ulasan</h2>
             <form action="#" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="nama">Nama:</label>
                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama Anda" required>

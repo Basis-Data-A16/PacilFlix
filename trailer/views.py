@@ -2,8 +2,6 @@ from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.db import connection
-#from .forms import UlasanForm
-#from .models import Ulasan
 
 def trailer_list(request):   
     top_10_selection = 'global'
@@ -280,20 +278,26 @@ def film_detail(request, film_id):
     average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
 
     # Ambil ulasan-ulasan dari database
-#    ulasan = Ulasan.objects.filter(id_tayangan=film_id)
-
-    # Jika request adalah POST, proses form ulasan
-#    if request.method == 'POST':
-#        form = UlasanForm(request.POST)
-#        if form.is_valid():
-#            ulasan_baru = form.save(commit=False)
-#            ulasan_baru.id_tayangan = film_id
-#            ulasan_baru.username = request.user
-#            ulasan_baru.save()
-#            messages.success(request, 'Ulasan berhasil ditambahkan.')
-#            return redirect('film_detail', film_id=film_id)
-#    else:
-#        form = UlasanForm()
+    if request.method == 'POST':
+        id_tayangan = request.POST.get('id_tayangan')
+        username = request.POST.get('username')
+        rating = request.POST.get('rating')
+        deskripsi = request.POST.get('deskripsi')
+        
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""
+                    INSERT INTO ulasan (id_tayangan, username, rating, deskripsi)
+                    VALUES (%s, %s, %s, %s)
+                """, [id_tayangan, username, rating, deskripsi])
+                # Jika berhasil, komit perubahan ke database
+                cursor.connection.commit()
+                messages.success(request, 'Ulasan berhasil ditambahkan.')
+                return redirect('film_detail', film_id=film_id)
+            except Exception as e:
+                # Jika terjadi kesalahan, rollback perubahan dan tampilkan pesan error
+                cursor.connection.rollback()
+                messages.error(request, f'Gagal menambahkan ulasan: {e}')
 
     # Siapkan data film dalam bentuk dictionary
     film = {
@@ -392,20 +396,26 @@ def series_detail(request, series_id):
     average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
 
     # Ambil ulasan-ulasan dari database
-#    ulasan = Ulasan.objects.filter(id_tayangan=series_id)
-
-    # Jika request adalah POST, proses form ulasan
-#    if request.method == 'POST':
-#        form = UlasanForm(request.POST)
-#        if form.is_valid():
-#            ulasan_baru = form.save(commit=False)
-#            ulasan_baru.id_tayangan = series_id
-#            ulasan_baru.username = request.user
-#            ulasan_baru.save()
-#            messages.success(request, 'Ulasan berhasil ditambahkan.')
-#            return redirect('series_detail', series_id=series_id)
-#    else:
-#        form = UlasanForm()
+    if request.method == 'POST':
+        id_tayangan = request.POST.get('id_tayangan')
+        username = request.POST.get('username')
+        rating = request.POST.get('rating')
+        deskripsi = request.POST.get('deskripsi')
+        
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""
+                    INSERT INTO ulasan (id_tayangan, username, rating, deskripsi)
+                    VALUES (%s, %s, %s, %s)
+                """, [id_tayangan, username, rating, deskripsi])
+                # Jika berhasil, komit perubahan ke database
+                cursor.connection.commit()
+                messages.success(request, 'Ulasan berhasil ditambahkan.')
+                return redirect('film_detail', series_id=series_id)
+            except Exception as e:
+                # Jika terjadi kesalahan, rollback perubahan dan tampilkan pesan error
+                cursor.connection.rollback()
+                messages.error(request, f'Gagal menambahkan ulasan: {e}')
 
     # Siapkan data series dalam bentuk dictionary
     series = {
