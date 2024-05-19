@@ -7,7 +7,7 @@ Halaman Kelola Langganan
 {% block content %}
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
+    <div class="col-lg-10">
       <h2 class="text-center mb-4">Paket Langganan Aktif Anda:</h2>
       {% if current_subscription %}
       <div class="card shadow mb-4">
@@ -43,6 +43,36 @@ Halaman Kelola Langganan
         </div>
         {% endfor %}
       </div>
+      <h2 class="text-center mb-4">Riwayat Transaksi:</h2>
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Nama Paket</th>
+                <th>Harga</th>
+                <th>Resolusi Layar</th>
+                <th>Tanggal Dimulai</th>
+                <th>Tanggal Akhir</th>
+                <th>Metode Pembayaran</th>
+                <th>Tanggal Pembayaran</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for transaction in transaction_history %}
+              <tr>
+                <td>{{ transaction.0 }}</td>
+                <td>{{ transaction.1 }}</td>
+                <td>{{ transaction.2 }}</td>
+                <td>{{ transaction.3 }}</td>
+                <td>{{ transaction.4 }}</td>
+                <td>{{ transaction.5 }}</td>
+                <td>{{ transaction.6 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
     </div>
   </div>
 </div>

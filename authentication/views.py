@@ -66,4 +66,4 @@ def test(request):
 
 def logout(request):
     request.session.flush()
-    return HttpResponseRedirect(reverse('authentication:form-login'))
+    return HttpResponseRedirect(reverse('authentication:login-register'))

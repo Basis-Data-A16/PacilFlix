@@ -12,6 +12,30 @@
 
 <div class="top-10">
     <h2>10 Tayangan Terbaik Minggu Ini</h2>
+    {% if request.session.is_authenticated %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <form method="POST" action="{% url 'trailer:trailer_list' %}">
+                        {% csrf_token %}
+                        <button class="btn {% if top_10_selection == 'global' %} btn-danger {% else %} btn-secondary {% endif %} mb-3 w-100" type="submit" name="top_10_selection" value="global">Top Global</button>
+                    </form>
+                </th>
+                <th>
+                    <form method="POST" action="{% url 'trailer:trailer_list' %}">
+                        {% csrf_token %}
+                        <button class="btn {% if top_10_selection == 'asal_negara' %} btn-danger {% else %} btn-secondary {% endif %} mb-3 w-100" type="submit" name="top_10_selection" value="asal_negara">Top Lokal</button>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+    {% else %}
+    <form method="POST" action="{% url 'trailer:trailer_list' %}">
+        {% csrf_token %}
+        <button class="btn btn-danger mb-3 w-100" name="top_10_selection" disabled>Top Global</button>
+    </form>
+    {% endif %}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,16 +60,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {% if request.session.is_authenticated %}
-    <form method="POST" action="{% url 'trailer:trailer_list' %}">
-        {% csrf_token %}
-        <button class="btn {% if top_10_selection == 'global' %} btn-danger {% else %} btn-secondary {% endif %} mb-3" type="submit" name="top_10_selection" value="global">Top Global</button>
-    </form>
-    <form method="POST" action="{% url 'trailer:trailer_list' %}">
-        {% csrf_token %}
-        <button class="btn {% if top_10_selection == 'asal_negara' %} btn-danger {% else %} btn-secondary {% endif %} mb-3" type="submit" name="top_10_selection" value="asal_negara">Top Lokal</button>
-    </form>
-    {% endif %}
 </div>
 
 <div class="film">

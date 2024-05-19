@@ -128,6 +128,7 @@ def trailer_list(request):
     # Mapping data ke dictionary untuk dikirim ke template
     top_10 = [{'peringkat': i+1, 'judul': row[1], 'sinopsis': row[2], 'trailer_url': row[3],
                'release_date': row[4], 'view_count': row[5]} for i, row in enumerate(top_10_data)]
+    
     films = [{'id': row[0], 'judul': row[1], 'sinopsis': row[2], 'asal_negara':row[3], 'trailer_url': row[4], 'release_date': row[5]} for row in film_data]
     series = [{'id': row[0], 'judul': row[1], 'sinopsis': row[2], 'asal_negara':row[3], 'trailer_url': row[4], 'release_date': row[5]} for row in series_data]
     
