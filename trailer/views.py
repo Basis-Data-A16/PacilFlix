@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 
 def trailer_list(request):   
@@ -204,7 +204,7 @@ def search_trailer(request):
 
     return render(request, 'search_tayangan.html', context)
 
-@csrf_protect
+@csrf_exempt
 def film_detail(request, film_id):
     # Ambil data film dari database dengan menggabungkan tabel Tayangan dan Film
     with connection.cursor() as cursor:
@@ -315,14 +315,12 @@ def film_detail(request, film_id):
         'penulis_skenario': [writer[0] for writer in writer_data],
         'sutradara': [director[0] for director in director_data],
         'reviews': [{'rating': review[0]} for review in reviews_data],
-#        'ulasan': ulasan,
-#        'form': form,
     }
 
     # Render template dengan data film dan form ulasan
     return render(request, 'film_detail.html', {'film': film})
 
-@csrf_protect
+@csrf_exempt
 def series_detail(request, series_id):
     # Fetch series data from the database
     with connection.cursor() as cursor:
@@ -431,8 +429,6 @@ def series_detail(request, series_id):
         'penulis_skenario': [writer[0] for writer in writer_data],
         'sutradara': [director[0] for director in director_data],
         'episodes': [{'id': index, 'title': episode[0]} for index, episode in enumerate(episodes_data, start=1)],
-#        'ulasan': ulasan,
-#        'form': form,
     }
 
     # Render template dengan data series dan form ulasan
