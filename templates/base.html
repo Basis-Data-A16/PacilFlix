@@ -18,7 +18,7 @@
   
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'trailer:trailer_list' %}">{% if request.session.is_authenticated %}Hi {{ request.session.username }}, Welcome to Pacilflix!{% else %}PacilFlix{% endif %}</a>
+    <a class="navbar-brand" href="{% url 'trailer:trailer_list' %}">{% if request.session.is_authenticated %}Hi {{ request.session.username }}, Welcome to Pacilflix A-16!{% else %}PacilFlix A-16{% endif %}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -33,10 +33,8 @@
             More
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Daftar Tayangan</a>
+            <a class="dropdown-item" href="{% url 'trailer:trailer_list' %}">Daftar Tayangan</a>
             <a class="dropdown-item" href="{% url 'kontributor:kontributor' %}">Daftar Kontributor</a>
-            <a class="dropdown-item" href="#">Kelola Daftar Favorit</a>
-            <a class="dropdown-item" href="#">Kelola Daftar Unduhan</a>
             <a class="dropdown-item" href="{% url 'langganan:langganan' %}">Kelola Langganan</a>
           </div>
         </li>
