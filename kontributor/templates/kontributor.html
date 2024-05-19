@@ -5,11 +5,30 @@
 {% block content %}
 <h2>Daftar Kontributor</h2>
 
-<!-- Search Bar -->
-<form class="form-inline mb-3" method="GET">
-  <input class="form-control mr-sm-2" type="search" name="search" placeholder="Cari kontributor" aria-label="Search" value="{{ search_query }}">
-  <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
-</form>
+<!-- Filter Buttons -->
+<div class="mb-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-center" style="width: 33%;">
+          <form method="GET" action="">
+            <button class="btn {% if search_query == 'pemain' %}btn-danger{% else %}btn-dark{% endif %} w-100" type="submit" name="search" value="pemain">Pemain</button>
+          </form>
+        </th>
+        <th class="text-center" style="width: 33%;">
+          <form method="GET" action="">
+            <button class="btn {% if search_query == 'sutradara' %}btn-danger{% else %}btn-dark{% endif %} w-100" type="submit" name="search" value="sutradara">Sutradara</button>
+          </form>
+        </th>
+        <th class="text-center" style="width: 33%;">
+          <form method="GET" action="">
+            <button class="btn {% if search_query == 'penulis_skenario' %}btn-danger{% else %}btn-dark{% endif %} w-100" type="submit" name="search" value="penulis_skenario">Penulis Skenario</button>
+          </form>
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
 
 <div>
   <div class="card-body">
@@ -35,7 +54,7 @@
         {% else %}
           <tr>
             <td colspan="4" class="text-center">
-              Tidak ada kontributor yang ditemukan. Silakan cari dengan tipe 'Sutradara', 'Pemain', atau 'Penulis Skenario'.
+              Tidak ada kontributor yang ditemukan. Silakan pilih salah satu tipe 'Sutradara', 'Pemain', atau 'Penulis Skenario'.
             </td>
           </tr>
         {% endif %}
