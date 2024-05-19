@@ -59,7 +59,7 @@
         <div class="form-group">
             <form action="{% url 'trailer:add_ulasan' %}" method="post">
                 {% csrf_token %}  
-                <input type="hidden" name="id" value="{{ series.id }}">
+                <input type="hidden" name="id_tayangan" value="{{ series.id }}">
                 <input type="hidden" name="tipe" value="series">
                 <div class="row">
                     <div class="col-md-8">
@@ -85,7 +85,7 @@
         {% endif %}
         <h5><b>Daftar Ulasan:</b></h5>
         <ul class="list-disc pl-4" id="daftarUlasan">
-            {% for item in ulasan %}
+            {% for item in reviews %}
             <b>Username:</b> {{ item.username }}</br>
             <b>Rating:</b> {{ item.rating }}</br>
             <b>Deskripsi:</b> {{ item.deskripsi }}</br></br>

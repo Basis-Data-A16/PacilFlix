@@ -290,6 +290,7 @@ def film_detail(request, film_id):
 
     # Siapkan data film dalam bentuk dictionary
     film = {
+        'id': film_id,
         'judul': film_data[0],
         'sinopsis': film_data[1],
         'durasi_film': film_data[2],
@@ -475,7 +476,7 @@ def add_ulasan(request):
 
     if request.method == "POST":
         username = request.COOKIES.get('username')
-        id = request.POST['id']
+        id = request.POST['id_tayangan']
         rating = int(request.POST['rating'])
         deskripsi = request.POST['deskripsi']
         tipe = request.POST['tipe']
@@ -483,7 +484,7 @@ def add_ulasan(request):
         cursor = connection.cursor()
         try:
             cursor.execute(f"""
-                INSERT INTO "ULASAN" VALUES ('{id}', '{username}', NOW(), '{rating}', '{deskripsi}');
+                INSERT INTO ULASAN VALUES ('{id}', '{username}', NOW(), '{rating}', '{deskripsi}');
             """)
             messages.add_message(request, messages.SUCCESS, 'Ulasan ditambahkan!', extra_tags='ulasan')
         except InternalError as e:
