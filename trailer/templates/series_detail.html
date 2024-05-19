@@ -4,66 +4,111 @@
 
 {% block content %}
 <h1>Series Detail</h1>
-<h2>Judul: Summertime Render</h2>
-<h3>Episode:</h3>
-<ul>
-    Currently not available
-</ul>
-<p>Sinopsis: Since the death of his parents, Shinpei Ajiro had lived with the Kofune family and their two daughters—Mio and Ushio. Although he then left his home island to continue his education in Tokyo, Shinpei returns after Ushio tragically drowns during the attempted rescue of a little girl. During the funeral, his best friend informs him about bruises found around Ushio's neck, casting doubt over the cause of her death.
+<div class="series-detail">
+    <div class="card">
+        <div class="card-body">
+            <h2>Judul: {{ series.judul }}</h2>
+            <h3>Episode:</h3>
+            {% if series.episodes %}
+                <div class="card">
+                    <div class="card-body">
+                        <ul>
+                            {% for episode in series.episodes %}
+                            <a href="{% url 'trailer:episode_detail' id=series.id sub_judul=episode.title %}"class="list-group-item">>{{ episode.title }}</a>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <p>Currently not available</p>
+            {% endif %}
+            <h2>
+                <button class="btn btn-primary mb-2" id="btnFavorit" data-bs-toggle="modal" data-bs-target="#favoriteListModal" data-judul_tayangan="">Jadikan Favorit</button>
+            </h2>
+            <h2>
+                <a href=""><button class="btn btn-primary mb-2" id="btnUnduh" data-bs-toggle="modal" data-bs-target="#downloadModal" data-id= "{{ series.id }}">Unduh</button></a>
+            </h2>
+            <p>Sinopsis: {{ series.sinopsis }}</p>
+            <p>Total View: {{ series.total_views }}</p>
+            <p>Rating Rata-Rata: {{ series.average_rating }}</p>
+            <h3>Genre:</h3>
+            <ul>
+                {% for genre in series.genre %}
+                    <li>{{ genre }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Asal Negara: {{ series.asal_negara }}</h3>
+            <h3>Pemain:</h3>
+            <ul>
+                {% for actor in series.pemain %}
+                    <li>{{ actor }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Penulis Skenario:</h3>
+            <ul>
+                {% for writer in series.penulis_skenario %}
+                    <li>{{ writer }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Sutradara:</h3>
+            <ul>
+                {% for director in series.sutradara %}
+                    <li>{{ director }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-    Suspecting a murder has taken place, Shinpei reevaluates recent events, but strange incidents only continue to transpire. Disappearing people and other unexplainable occurrences lead Mio to recall an old folktale referring to entities called "Shadows," which may not be entirely fantasy. Supposedly, an encounter with one's Shadow foretells the person's impending demise.</p>
-<p>Tanggal Rilis: October 23, 2017 – February 1, 2021</p>
-<p>Total View: 5838384</p>
-<p>Rating Rata-Rata: 8.5</p>
-<h3>Genre:</h3>
-<ul>
-    Mystery
-</ul>
-<h3>Asal Negara: Jepang</h3>
-<h3>Pemain:</h3>
-<ul>
-    <li>Natsuki Hanae</li>
-    <li>Anna Nagase</li>
-    <li>Saho Shirasu</li>
-</ul>
-<h3>Penulis Skenario:</h3>
-<ul>
-	<li>Yasuki Tanaka</li>
-</ul>
-<h3>Sutradara: 	Ayumu Watanabe</h3>
-
-<!-- Bagian Ulasan -->
-<div class="card shadow mt-3">
-    <div class="card-body">
-        <h2>Bagian Ulasan</h2>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="nama">Nama:</label>
-                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
-            </div>
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi Ulasan:</label>
-                <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="rating">Rating:</label>
-                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
-        </form>
-        <hr>
-        {% if reviews %}
-        <h3>Daftar Ulasan:</h3>
-        <ul>
-            {% for review in reviews %}
-                <li>
-                    <strong>{{ review.author }}</strong>: {{ review.content }} - Rating: {{ review.rating }}
-                </li>
+    <!-- Bagian Ulasan -->
+    <div class="row-md-4">
+        <h2 class="title">Bagian Ulasan</h2>
+        <div class="form-group">
+            <form action="{% url 'trailer:add_ulasan' %}" method="post">
+                {% csrf_token %}  
+                <input type="hidden" name="id_tayangan" value="{{ series.id }}">
+                <input type="hidden" name="tipe" value="series">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control mb-2" id="inputUlasan" name="deskripsi" placeholder="Deskripsi Ulasan" maxlength="255" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control mb-2" id="inputRating" name="rating" placeholder="Rating (1-10)" min="1" max="10" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary mb-2" id="btnSubmit">Kirim Ulasan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if messages %}
+        <div class="message-container">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <h5><b>Daftar Ulasan:</b></h5>
+        <ul class="list-disc pl-4" id="daftarUlasan">
+            {% for item in reviews %}
+            <b>Username:</b> {{ item.username }}</br>
+            <b>Rating:</b> {{ item.rating }}</br>
+            <b>Deskripsi:</b> {{ item.deskripsi }}</br></br>
+            {% empty %}
+            <div class="empty">Belum ada ulasan</div>
             {% endfor %}
         </ul>
-        {% else %}
-        <p>Belum ada ulasan untuk seri ini.</p>
-        {% endif %}
     </div>
 </div>
+<script>
+    document.getElementById("btnSubmit").addEventListener("click", function() {
+        var inputRating = document.getElementById("inputRating").value;
+        if (isNaN(inputRating) || inputRating < 0 || inputRating > 10) {
+            alert("Rating harus dalam rentang 0-10");
+            return false;
+        }
+        console.log("Rating: " + inputRating);
+    });
+</script>
 {% endblock %}

@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-from os import getenv
 from pathlib import Path
 
 from dotenv import load_dotenv
+import dj_database_url
+
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,7 +46,8 @@ INSTALLED_APPS = [
     'authentication',
     'kontributor',
     'langganan',
-    'trailer'
+    'trailer',
+    'trailer.templatetags.custom_filter'
 ]
 
 MIDDLEWARE = [
@@ -81,19 +84,9 @@ WSGI_APPLICATION = 'PacilFlix.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DATABASE_URL = 'postgresql://database_owner:YTW1Nubc4JHo@ep-green-shadow-a1u432lj.ap-southeast-1.aws.neon.tech/database?sslmode=require'
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': getenv('PGDATABASE'),
-    'USER': getenv('PGUSER'),
-    'PASSWORD': getenv('PGPASSWORD'),
-    'HOST': getenv('PGHOST'),
-    'PORT': getenv('PGPORT', 5432),
-    'OPTIONS': {
-        'sslmode': 'require' if getenv('USE_SSL', 'false').lower() == 'true' else 'prefer',
-        'options': '-c search_path=pacilflix'
-    },
-  }
+    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
 }
 
 # Password validation
@@ -140,3 +133,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/form-login/'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://pacilflix-a16.up.railway.app'
+]
+
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

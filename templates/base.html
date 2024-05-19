@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Django App{% endblock %}</title>
+  <title>{% block title %}PacilFlix{% endblock %}</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <!-- Google Fonts - Poppins -->
@@ -18,34 +18,29 @@
   
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="#">{% if request.COOKIES.is_authenticated %}Hi {{ request.COOKIES.username }}, Welcome to Pacilflix!{% else %}PacilFlix{% endif %}</a>
+    <a class="navbar-brand" href="{% url 'trailer:trailer_list' %}">{% if request.session.is_authenticated %}Hi {{ request.session.username }}, Welcome to Pacilflix A-16!{% else %}PacilFlix A-16{% endif %}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        {% if request.COOKIES.is_authenticated %}
+        {% if request.session.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'authentication:logout' %}">Logout</a>
+          <a class="btn btn-danger" href="{% url 'authentication:logout' %}" role="button">Logout</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             More
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Daftar Tayangan</a>
+            <a class="dropdown-item" href="{% url 'trailer:trailer_list' %}">Daftar Tayangan</a>
             <a class="dropdown-item" href="{% url 'kontributor:kontributor' %}">Daftar Kontributor</a>
-            <a class="dropdown-item" href="#">Kelola Daftar Favorit</a>
-            <a class="dropdown-item" href="#">Kelola Daftar Unduhan</a>
             <a class="dropdown-item" href="{% url 'langganan:langganan' %}">Kelola Langganan</a>
           </div>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="#">Trailer Tayangan</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-primary" href="{% url 'authentication:form-login' %}">Login</a>
+          <a class="nav-link" href="{% url 'trailer:trailer_list' %}">Tonton Trailer</a>
         </li>
         {% endif %}
       </ul>

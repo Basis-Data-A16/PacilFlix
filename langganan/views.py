@@ -1,20 +1,19 @@
 from django.shortcuts import render, redirect
 from django.db import connection
-from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.http import HttpResponseBadRequest
 
-# @login_required
 def langganan(request):
-    # Mendapatkan username dari pengguna yang sedang login
-    username = request.COOKIES.get('username')
+    if not request.session.get('is_authenticated'):
+        return redirect('authentication:form-login')
 
-    # Mendapatkan informasi paket aktif
+    username = request.session.get('username')
+
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT p.nama, p.harga, p.resolusi_layar, t.start_date_time, t.end_date_time, t.metode_pembayaran, t.timestamp_pembayaran
-            FROM pacilflix.transaction t
-            JOIN pacilflix.paket p ON t.nama_paket = p.nama
+            FROM transaction t
+            JOIN paket p ON t.nama_paket = p.nama
             WHERE t.username = %s AND t.end_date_time > CURRENT_DATE
             ORDER BY t.start_date_time DESC
             LIMIT 1
@@ -25,40 +24,46 @@ def langganan(request):
     with connection.cursor() as cursor:
         cursor.execute("""
             SELECT nama, harga, resolusi_layar
-            FROM pacilflix.paket
+            FROM paket
         """)
         packages = cursor.fetchall()
+    # Mendapatkan riwayat transaksi pengguna
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT p.nama, p.harga, p.resolusi_layar, t.start_date_time, t.end_date_time, t.metode_pembayaran, t.timestamp_pembayaran
+            FROM transaction t
+            JOIN paket p ON t.nama_paket = p.nama
+            WHERE t.username = %s 
+            ORDER BY t.start_date_time DESC
+        """, [username])
+        transaction_history = cursor.fetchall()
 
     context = {
         'current_subscription': current_subscription,
         'packages': packages,
+        'transaction_history': transaction_history
     }
 
     return render(request, 'kelola_langganan.html', context)
 
-# @login_required
 def bayar(request):
+    if not request.session.get('is_authenticated'):
+        return redirect('authentication:form-login')
+
     if request.method == "POST":
-        username = request.COOKIES.get('username')
+        username = request.session.get('username')
         package_name = request.POST.get('package_name')
         metode_pembayaran = request.POST.get('metode_pembayaran')
-        
-        # Validasi input
-        if not package_name or not metode_pembayaran:
-            return HttpResponseBadRequest("Nama paket dan metode pembayaran diperlukan.")
 
-        # Menentukan tanggal mulai dan akhir untuk langganan baru
         start_date = datetime.now().date()
         end_date = start_date + timedelta(days=30)
 
-        # Memasukkan transaksi baru atau memperbarui transaksi yang ada
+        # Memasukkan transaksi baru
         with connection.cursor() as cursor:
             cursor.execute("""
-                INSERT INTO pacilflix.transaction (username, start_date_time, end_date_time, nama_paket, metode_pembayaran, timestamp_pembayaran)
+                INSERT INTO transaction (username, start_date_time, end_date_time, nama_paket, metode_pembayaran, timestamp_pembayaran)
                 VALUES (%s, %s, %s, %s, %s, %s)
-                ON CONFLICT (username, start_date_time) DO UPDATE
-                SET end_date_time = %s, nama_paket = %s, metode_pembayaran = %s, timestamp_pembayaran = %s
-            """, [username, start_date, end_date, package_name, metode_pembayaran, datetime.now(), end_date, package_name, metode_pembayaran, datetime.now()])
+            """, [username, start_date, end_date, package_name, metode_pembayaran, datetime.now()])
 
         return redirect('langganan:langganan')
     else:
@@ -67,7 +72,7 @@ def bayar(request):
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT nama, harga, resolusi_layar
-                FROM pacilflix.paket
+                FROM paket
                 WHERE nama = %s
             """, [package_name])
             package = cursor.fetchone()
