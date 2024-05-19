@@ -1,6 +1,7 @@
 from django.http import Http404
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_protect
 from django.db import connection
 
 def trailer_list(request):   
@@ -203,7 +204,7 @@ def search_trailer(request):
 
     return render(request, 'search_tayangan.html', context)
 
-
+@csrf_protect
 def film_detail(request, film_id):
     # Ambil data film dari database dengan menggabungkan tabel Tayangan dan Film
     with connection.cursor() as cursor:
@@ -321,6 +322,7 @@ def film_detail(request, film_id):
     # Render template dengan data film dan form ulasan
     return render(request, 'film_detail.html', {'film': film})
 
+@csrf_protect
 def series_detail(request, series_id):
     # Fetch series data from the database
     with connection.cursor() as cursor:
