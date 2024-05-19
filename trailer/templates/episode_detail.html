@@ -9,19 +9,19 @@
     {% if episode %}
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title">Judul Series: {{ episode.series_title }}</h5>
+            <h5 class="card-title">Judul Series: {{ episode.sub_judul }}</h5>
             <h5 class="card-title">Sub-judul Episode: {{ episode.title }}</h5>
             <p class="card-text">Sinopsis: {{ episode.sinopsis }}</p>
-            <p class="card-text">Durasi: {{ episode.duration }} menit</p>
+            <p class="card-text">Durasi: {{ episode.durasi }} menit</p>
             <p class="card-text">Tanggal Rilis: {{ episode.release_date }}</p>
-            <p class="card-text">URL: {{ episode.url }}</p>
+            <p class="card-text">URL: {{ episode.url_video }}</p>
         </div>
     </div>
 
     <h3>Episode Lainnya:</h3>
     <div class="list-group">
         {% for other_episode in other_episodes %}
-        <a href="{% url 'trailer:episode_detail' episode_id=other_episode.id %}" class="list-group-item list-group-item-action">{{ other_episode.title }}</a>
+            <a href="{% url 'trailer:episode_detail' episode_id=other_episode.id %}" class="list-group-item list-group-item-action">{{ other_episode.sub_judul }}</a>
         {% endfor %}
     </div>
     {% else %}

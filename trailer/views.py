@@ -1,8 +1,11 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
+from urllib.parse import quote
+
 
 def trailer_list(request):   
     top_10_selection = 'global'
@@ -419,6 +422,7 @@ def series_detail(request, series_id):
 
     # Siapkan data series dalam bentuk dictionary
     series = {
+        'id': series_id,
         'judul': series_data[0],
         'sinopsis': series_data[1],
         'asal_negara': series_data[2],
@@ -434,40 +438,44 @@ def series_detail(request, series_id):
     # Render template dengan data series dan form ulasan
     return render(request, 'series_detail.html', {'series': series})
 
-def episode_detail(request, episode_id):
-    # Mengambil data episode dari database
+def episode_detail(request, id, sub_judul):
+    if not request.session.get('is_authenticated'):
+        return redirect(reverse('authentication:form-login'))
+    
     with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT e.sub_judul, e.sinopsis, e.durasi, e.release_date, s.judul AS series_judul
-            FROM episode e
-            INNER JOIN series s ON e.id_series = s.id
-            WHERE e.id = %s
-        """, [str(episode_id)])
-        episode_data = cursor.fetchone()
+        cursor.execute(f"""SELECT T.id, T.judul, E.sub_judul, E.sinopsis, E.durasi, E.url_video, E.release_date
+                              FROM EPISODE AS E
+                              JOIN TAYANGAN AS T ON T.id = E.id_series
+                              WHERE E.id_series = '{id}' AND E.sub_judul = '{sub_judul}';""")
+        episode = cursor.fetchall()
 
-    # Check if episode data exists
-    if episode_data is None:
-        raise Http404("Episode not found")
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT id_series, sub_judul
+                          FROM EPISODE
+                          WHERE id_series = '{id}' AND sub_judul != '{sub_judul}';""")
+        other_episodes = cursor.fetchall()
 
-    # Prepare episode object
-    episode = {
-        'title': episode_data[0],
-        'sinopsis': episode_data[1],
-        'duration': episode_data[2],
-        'release_date': episode_data[3],
-        'series_title': episode_data[4],
-    }
+    with connection.cursor() as cursor:
+        cursor.execute(f"""SELECT
+                                    CASE
+                                        WHEN release_date < CURRENT_DATE THEN 1
+                                        ELSE 0
+                                    END AS is_released
+                                FROM EPISODE
+                                WHERE id_series = '{id}' AND sub_judul = '{sub_judul}';""")
+        released = cursor.fetchall()
+    
+    
+    username = request.session.get('username')
+    
+    for i in range(len(other_episodes)):
+        encoded = quote(other_episodes[i][1]) 
+        url = f"{other_episodes[i][0]}/{encoded}/" 
+        other_episodes[i] = {'sub_judul': other_episodes[i][1], 'url': url} 
 
-    # Mengambil daftar episode lainnya
-    cursor.execute("""
-        SELECT e.id, e.sub_judul
-        FROM episode e
-        INNER JOIN series s ON e.id_series = s.id
-        WHERE e.id != %s AND s.id = (SELECT id_series FROM episode WHERE id = %s)
-    """, [episode_id, episode_id])
-    other_episodes_data = cursor.fetchall()
+    context = {'episode': episode[0],
+            'other_episodes': other_episodes,
+            'released': released[0]
+            }
 
-    other_episodes = [{'id': data[0], 'title': data[1]} for data in other_episodes_data]
-
-    return render(request, 'episode_detail.html', {'episode': episode, 'other_episodes': other_episodes})
-
+    return render(request, 'episode_detail.html', context)

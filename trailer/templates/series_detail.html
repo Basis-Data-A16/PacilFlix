@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <ul>
                             {% for episode in series.episodes %}
-                                <li><a href="">{{ episode.title }}</a></li>
+                            <a href="{% url 'trailer:episode_detail' id=series.id sub_judul=episode.title %}">{{ episode.title }}</a>
                             {% endfor %}
                         </ul>
                     </div>
