@@ -17,6 +17,9 @@
             <tr>
                 <th>Peringkat</th>
                 <th>Judul</th>
+                <th>Sinopsis</th>
+                <th>Trailer URL</th>
+                <th>Tanggal Rilis</th>
                 <th>Total View 7 Hari Terakhir</th>
             </tr>
         </thead>
@@ -25,6 +28,9 @@
             <tr>
                 <td>{{ tayangan.peringkat }}</td>
                 <td>{{ tayangan.judul }}</td>
+                <td>{{ tayangan.sinopsis }}</td>
+                <td>{{ tayangan.trailer_url }}</td>
+                <td>{{ tayangan.release_date }}</td>
                 <td>{{ tayangan.view_count }}</td>
             </tr>
             {% endfor %}
@@ -54,7 +60,7 @@
                 <p class="card-text">{{ film.release_date }}</p>
                 <a href="{{ film.trailer_url }}" class="btn btn-primary">Lihat Trailer</a>
                 {% if request.session.is_authenticated %}
-                <a href="{% url 'trailer:film_detail' %}" class="btn btn-dark">Tayangan</a>
+                <a href="{% url 'trailer:film_detail' film.id %}" class="btn btn-dark">Tayangan</a>
                 {% endif %}
             </div>
         </div>
@@ -72,9 +78,9 @@
                 <h5 class="card-title">{{ serie.judul }}</h5>
                 <p class="card-text">{{ serie.sinopsis }}</p>
                 <p class="card-text">{{ serie.release_date }}</p>
-                <a href="{{ serie.trailer_url }}" class="btn btn-primary">Lihat Trailer</a>
+                <a href="{{ series.trailer_url }}" class="btn btn-primary">Lihat Trailer</a>
                 {% if request.session.is_authenticated %}
-                <a href="{% url 'trailer:series_detail' %}" class="btn btn-dark">Tayangan</a>
+                <a href="{% url 'trailer:series_detail' serie.id %}" class="btn btn-dark">Tayangan</a>
                 {% endif %}
             </div>
         </div>

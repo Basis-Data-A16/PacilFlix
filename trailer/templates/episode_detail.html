@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
+{% load custom_filter %}
 
 {% block title %}Episode Detail{% endblock %}
 
 {% block content %}
-<h1>Episode Detail</h1>
-<h2>Judul: "{{ episode.title }}"</h2>
-<h3>Sub Judul: "{{ episode.subtitle }}"</h3>
-<p>Sinopsis: {{ episode.sinopsis }}</p>
-<p>Durasi Episode: {{ episode.duration }}</p>
-<p>Tanggal Rilis: {{ episode.release_date }}</p>
-<p>URL Episode: Currently unavailable</p>
+<div class="container">
+    <h1>Episode Detail</h1>
+    {% if episode %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Judul Series: {{ episode.series_title }}</h5>
+            <h5 class="card-title">Sub-judul Episode: {{ episode.title }}</h5>
+            <p class="card-text">Sinopsis: {{ episode.sinopsis }}</p>
+            <p class="card-text">Durasi: {{ episode.duration }} menit</p>
+            <p class="card-text">Tanggal Rilis: {{ episode.release_date }}</p>
+            <p class="card-text">URL: {{ episode.url }}</p>
+        </div>
+    </div>
+
+    <h3>Episode Lainnya:</h3>
+    <div class="list-group">
+        {% for other_episode in other_episodes %}
+        <a href="{% url 'trailer:episode_detail' episode_id=other_episode.id %}" class="list-group-item list-group-item-action">{{ other_episode.title }}</a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Episode tidak ditemukan.</p>
+    {% endif %}
+</div>
+{% endblock %}

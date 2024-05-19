@@ -4,74 +4,88 @@
 
 {% block content %}
 <h1>Series Detail</h1>
-<h2>Judul: {{ series.judul }}</h2>
-<h3>Episode:</h3>
-{% if series.episodes %}
-    <ul>
-        {% for episode in series.episodes %}
-            <li>{{ episode.title }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Currently not available</p>
-{% endif %}
-<p>Sinopsis: {{ series.sinopsis }}</p>
-<p>Tanggal Rilis: {{ series.release_date }}</p>
-<p>Total View: {{ series.total_views }}</p>
-<p>Rating Rata-Rata: {{ series.average_rating }}</p>
-<h3>Genre:</h3>
-<ul>
-    {% for genre in series.genres %}
-        <li>{{ genre }}</li>
-    {% endfor %}
-</ul>
-<h3>Asal Negara: {{ series.country }}</h3>
-<h3>Pemain:</h3>
-<ul>
-    {% for actor in series.actors %}
-        <li>{{ actor }}</li>
-    {% endfor %}
-</ul>
-<h3>Penulis Skenario:</h3>
-<ul>
-    {% for writer in series.writers %}
-        <li>{{ writer }}</li>
-    {% endfor %}
-</ul>
-<h3>Sutradara: {{ series.director }}</h3>
+<div class="series-detail">
+    <div class="card">
+        <div class="card-body">
+            <h2>Judul: {{ series.judul }}</h2>
+            <h3>Episode:</h3>
+            {% if series.episodes %}
+                <div class="card">
+                    <div class="card-body">
+                        <ul>
+                            {% for episode in series.episodes %}
+                                <li><a href="">{{ episode.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <p>Currently not available</p>
+            {% endif %}
+            <p>Sinopsis: {{ series.sinopsis }}</p>
+            <p>Total View: {{ series.total_views }}</p>
+            <p>Rating Rata-Rata: {{ series.average_rating }}</p>
+            <h3>Genre:</h3>
+            <ul>
+                {% for genre in series.genre %}
+                    <li>{{ genre }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Asal Negara: {{ series.asal_negara }}</h3>
+            <h3>Pemain:</h3>
+            <ul>
+                {% for actor in series.pemain %}
+                    <li>{{ actor }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Penulis Skenario:</h3>
+            <ul>
+                {% for writer in series.penulis_skenario %}
+                    <li>{{ writer }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Sutradara:</h3>
+            <ul>
+                {% for director in series.sutradara %}
+                    <li>{{ director }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-<!-- Bagian Ulasan -->
-<div class="card shadow mt-3">
-    <div class="card-body">
-        <h2>Bagian Ulasan</h2>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="nama">Nama:</label>
-                <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
-            </div>
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi Ulasan:</label>
-                <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="rating">Rating:</label>
-                <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
-        </form>
-        <hr>
-        {% if reviews %}
-        <h3>Daftar Ulasan:</h3>
-        <ul>
-            {% for review in reviews %}
-                <li>
-                    <strong>{{ review.author }}</strong>: {{ review.content }} - Rating: {{ review.rating }}
-                </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>Belum ada ulasan untuk seri ini.</p>
-        {% endif %}
+    <!-- Bagian Ulasan -->
+    <div class="card shadow mt-3">
+        <div class="card-body">
+            <h2>Bagian Ulasan</h2>
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="nama">Nama:</label>
+                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi Ulasan:</label>
+                    <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
+            </form>
+            <hr>
+            {% if reviews %}
+            <h3>Daftar Ulasan:</h3>
+            <ul>
+                {% for review in reviews %}
+                    <li>
+                        <strong>{{ review.author }}</strong>: {{ review.content }} - Rating: {{ review.rating }}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Belum ada ulasan untuk seri ini.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -7,35 +7,40 @@
 <h1>Film Detail</h1>
 <div class="film-detail">
     <div class="card">
-        <img src="http://img.youtube.com/vi/{{ film.trailer_url|youtube_id }}/hqdefault.jpg" class="card-img-top" alt="{{ film.judul }} thumbnail">
+        <img src="http://img.youtube.com/vi/{{ film.url_video_trailer|youtube_id }}/hqdefault.jpg" class="card-img-top" alt="{{ film.judul }} thumbnail">
         <div class="card-body">
             <h5 class="card-title">{{ film.judul }}</h5>
             <p class="card-text">{{ film.sinopsis }}</p>
-            <p class="card-text">Durasi Film: {{ film.duration }}</p>
+            <p class="card-text">Durasi Film: {{ film.durasi_film }} menit</p>
             <p class="card-text">Tanggal Rilis: {{ film.release_date }}</p>
             <p class="card-text">Total View: {{ film.total_views }}</p>
             <p class="card-text">Rating Rata-Rata: {{ film.average_rating }}</p>
-            <p class="card-text">URL Film: <a href="{{ film.trailer_url }}">Tonton Trailer</a></p>
+            <p class="card-text">URL Film: <a href="{{ film.url_video_trailer }}">Tonton Trailer</a></p>
             <h3>Genre:</h3>
             <ul>
-                {% for genre in film.genres %}
+                {% for genre in film.genre %}
                     <li>{{ genre }}</li>
                 {% endfor %}
             </ul>
-            <h3>Asal Negara: {{ film.country }}</h3>
+            <h3>Asal Negara: {{ film.asal_negara }}</h3>
             <h3>Pemain:</h3>
             <ul>
-                {% for actor in film.actors %}
+                {% for actor in film.pemain %}
                     <li>{{ actor }}</li>
                 {% endfor %}
             </ul>
             <h3>Penulis Skenario:</h3>
             <ul>
-                {% for writer in film.writers %}
+                {% for writer in film.penulis_skenario %}
                     <li>{{ writer }}</li>
                 {% endfor %}
             </ul>
-            <h3>Sutradara: {{ film.director }}</h3>
+            <h3>Sutradara:</h3>
+            <ul>
+                {% for director in film.sutradara %}
+                    <li>{{ director }}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 
@@ -61,7 +66,7 @@
             <hr>
             <h3>Daftar Ulasan:</h3>
             <div class="ulasan">
-                {% for review in reviews %}
+                {% for review in film.reviews %}
                     <p><strong>{{ review.nama }}</strong>: {{ review.deskripsi }} - Rating: {{ review.rating }}</p>
                 {% endfor %}
             </div>
