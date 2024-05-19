@@ -1,11 +1,10 @@
-from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.db import connection
+from django.db import InternalError, connection
 from urllib.parse import quote
-
 
 def trailer_list(request):   
     top_10_selection = 'global'
@@ -209,6 +208,9 @@ def search_trailer(request):
 
 @csrf_exempt
 def film_detail(request, film_id):
+    if not request.session.get('is_authenticated'):
+        return redirect(reverse('authentication:form-login'))
+    
     # Ambil data film dari database dengan menggabungkan tabel Tayangan dan Film
     with connection.cursor() as cursor:
         cursor.execute("""
@@ -238,7 +240,12 @@ def film_detail(request, film_id):
 
         # Fetch reviews for the film
         cursor.execute("SELECT rating FROM ULASAN WHERE id_tayangan = %s", [film_id])
-        reviews_data = cursor.fetchall()
+        ratings = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT username, rating, deskripsi FROM ULASAN WHERE id_tayangan = %s ORDER BY timestamp DESC
+        """, [film_id])
+        reviews = cursor.fetchall()
 
         # Fetch genre data for the film
         cursor.execute("""
@@ -279,29 +286,7 @@ def film_detail(request, film_id):
 
     # Calculate total_views and average_rating
     total_views = total_views_data[0] if total_views_data else 0
-    average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
-
-    # Ambil ulasan-ulasan dari database
-    if request.method == 'POST':
-        id_tayangan = request.POST.get('id_tayangan')
-        username = request.POST.get('username')
-        rating = request.POST.get('rating')
-        deskripsi = request.POST.get('deskripsi')
-        
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute("""
-                    INSERT INTO ulasan (id_tayangan, username, rating, deskripsi)
-                    VALUES (%s, %s, %s, %s)
-                """, [id_tayangan, username, rating, deskripsi])
-                # Jika berhasil, komit perubahan ke database
-                cursor.connection.commit()
-                messages.success(request, 'Ulasan berhasil ditambahkan.')
-                return redirect('film_detail', film_id=film_id)
-            except Exception as e:
-                # Jika terjadi kesalahan, rollback perubahan dan tampilkan pesan error
-                cursor.connection.rollback()
-                messages.error(request, f'Gagal menambahkan ulasan: {e}')
+    average_rating = sum(rating[0] for rating in ratings) / len(ratings) if ratings else 0
 
     # Siapkan data film dalam bentuk dictionary
     film = {
@@ -313,11 +298,11 @@ def film_detail(request, film_id):
         'asal_negara': film_data[5],
         'total_views': total_views,
         'average_rating': average_rating,
+        'reviews': reviews,
         'genre': [genre[0] for genre in genre_data],
         'pemain': [cast[0] for cast in cast_data],
         'penulis_skenario': [writer[0] for writer in writer_data],
         'sutradara': [director[0] for director in director_data],
-        'reviews': [{'rating': review[0]} for review in reviews_data],
     }
 
     # Render template dengan data film dan form ulasan
@@ -325,6 +310,9 @@ def film_detail(request, film_id):
 
 @csrf_exempt
 def series_detail(request, series_id):
+    if not request.session.get('is_authenticated'):
+        return redirect(reverse('authentication:form-login'))
+    
     # Fetch series data from the database
     with connection.cursor() as cursor:
         cursor.execute("""
@@ -352,9 +340,14 @@ def series_detail(request, series_id):
         cursor.execute("SELECT sub_judul FROM episode WHERE id_series = %s", [str(series_id)])
         episodes_data = cursor.fetchall()
 
-        # Fetch reviews for the series
-        cursor.execute("SELECT rating FROM ULASAN WHERE id_tayangan = %s", [str(series_id)])
-        reviews_data = cursor.fetchall()
+        # Fetch reviews for the film
+        cursor.execute("SELECT rating FROM ULASAN WHERE id_tayangan = %s", [series_id])
+        ratings = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT username, rating, deskripsi FROM ULASAN WHERE id_tayangan = %s ORDER BY timestamp DESC
+        """, [series_id])
+        reviews = cursor.fetchall()
 
         # Fetch genre data for the series
         cursor.execute("""
@@ -396,29 +389,7 @@ def series_detail(request, series_id):
 
     # Calculate total_views and average_rating
     total_views = total_views_data[0] if total_views_data else 0
-    average_rating = sum(rating[0] for rating in reviews_data) / len(reviews_data) if reviews_data else 0
-
-    # Ambil ulasan-ulasan dari database
-    if request.method == 'POST':
-        id_tayangan = request.POST.get('id_tayangan')
-        username = request.POST.get('username')
-        rating = request.POST.get('rating')
-        deskripsi = request.POST.get('deskripsi')
-        
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute("""
-                    INSERT INTO ulasan (id_tayangan, username, rating, deskripsi)
-                    VALUES (%s, %s, %s, %s)
-                """, [id_tayangan, username, rating, deskripsi])
-                # Jika berhasil, komit perubahan ke database
-                cursor.connection.commit()
-                messages.success(request, 'Ulasan berhasil ditambahkan.')
-                return redirect('film_detail', series_id=series_id)
-            except Exception as e:
-                # Jika terjadi kesalahan, rollback perubahan dan tampilkan pesan error
-                cursor.connection.rollback()
-                messages.error(request, f'Gagal menambahkan ulasan: {e}')
+    average_rating = sum(rating[0] for rating in ratings) / len(ratings) if ratings else 0
 
     # Siapkan data series dalam bentuk dictionary
     series = {
@@ -428,6 +399,7 @@ def series_detail(request, series_id):
         'asal_negara': series_data[2],
         'total_views': total_views,
         'average_rating': average_rating,
+        'reviews': reviews,
         'genre': [genre[0] for genre in genre_data],
         'pemain': [cast[0] for cast in cast_data],
         'penulis_skenario': [writer[0] for writer in writer_data],
@@ -443,17 +415,34 @@ def episode_detail(request, id, sub_judul):
         return redirect(reverse('authentication:form-login'))
     
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT T.id, T.judul, E.sub_judul, E.sinopsis, E.durasi, E.url_video, E.release_date
+        cursor.execute(f"""SELECT T.judul AS series_judul, E.sub_judul, E.sinopsis, E.durasi, E.url_video, E.release_date
                               FROM EPISODE AS E
                               JOIN TAYANGAN AS T ON T.id = E.id_series
                               WHERE E.id_series = '{id}' AND E.sub_judul = '{sub_judul}';""")
-        episode = cursor.fetchall()
+        episode_data = cursor.fetchone()
 
+    # Check if episode data exists
+    if episode_data is None:
+        raise Http404("Episode not found")
+
+    # Prepare episode object
+    episode = {
+        'series_judul': episode_data[0],
+        'sub_judul': episode_data[1],
+        'sinopsis': episode_data[2],
+        'durasi': episode_data[3],
+        'url_video': episode_data[4],
+        'release_date': episode_data[5].strftime("%Y-%m-%d"),
+    }
+
+    # Fetch other episodes
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT id_series, sub_judul
                           FROM EPISODE
                           WHERE id_series = '{id}' AND sub_judul != '{sub_judul}';""")
-        other_episodes = cursor.fetchall()
+        other_episodes_data = cursor.fetchall()
+
+    other_episodes = [{'id_series': ep[0], 'sub_judul': ep[1]} for ep in other_episodes_data]
 
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT
@@ -464,18 +453,42 @@ def episode_detail(request, id, sub_judul):
                                 FROM EPISODE
                                 WHERE id_series = '{id}' AND sub_judul = '{sub_judul}';""")
         released = cursor.fetchall()
+        is_released = released[0] if released else 0
     
     
     username = request.session.get('username')
     
-    for i in range(len(other_episodes)):
-        encoded = quote(other_episodes[i][1]) 
-        url = f"{other_episodes[i][0]}/{encoded}/" 
-        other_episodes[i] = {'sub_judul': other_episodes[i][1], 'url': url} 
+     # Encode sub_judul for URL
+    for ep in other_episodes:
+        ep['url'] = f"{ep['id_series']}/{quote(ep['sub_judul'])}/"
 
-    context = {'episode': episode[0],
+    context = {'episode': episode,
             'other_episodes': other_episodes,
-            'released': released[0]
+            'released': is_released,
             }
 
     return render(request, 'episode_detail.html', context)
+
+def add_ulasan(request):
+    if not request.session.get('is_authenticated'):
+        return redirect(reverse('authentication:form-login'))
+
+    if request.method == "POST":
+        username = request.COOKIES.get('username')
+        id = request.POST['id']
+        rating = int(request.POST['rating'])
+        deskripsi = request.POST['deskripsi']
+        tipe = request.POST['tipe']
+
+        cursor = connection.cursor()
+        try:
+            cursor.execute(f"""
+                INSERT INTO "ULASAN" VALUES ('{id}', '{username}', NOW(), '{rating}', '{deskripsi}');
+            """)
+            messages.add_message(request, messages.SUCCESS, 'Ulasan ditambahkan!', extra_tags='ulasan')
+        except InternalError as e:
+            if 'Username' in str(e):
+                messages.add_message(request, messages.ERROR, f"Username {username} telah memberikan ulasan untuk tayangan ini!", extra_tags='ulasan')
+        if tipe == 'series':
+            return HttpResponseRedirect(f'/tayangan/series/{id}')
+        return HttpResponseRedirect(f'/tayangan/film/{id}')

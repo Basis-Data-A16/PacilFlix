@@ -14,7 +14,7 @@
                     <div class="card-body">
                         <ul>
                             {% for episode in series.episodes %}
-                            <a href="{% url 'trailer:episode_detail' id=series.id sub_judul=episode.title %}">{{ episode.title }}</a>
+                            <a href="{% url 'trailer:episode_detail' id=series.id sub_judul=episode.title %}"class="list-group-item">>{{ episode.title }}</a>
                             {% endfor %}
                         </ul>
                     </div>
@@ -54,39 +54,55 @@
     </div>
 
     <!-- Bagian Ulasan -->
-    <div class="card shadow mt-3">
-        <div class="card-body">
-            <h2>Bagian Ulasan</h2>
-            <form action="#" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="nama">Nama:</label>
-                    <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+    <div class="row-md-4">
+        <h2 class="title">Bagian Ulasan</h2>
+        <div class="form-group">
+            <form action="{% url 'trailer:add_ulasan' %}" method="post">
+                {% csrf_token %}  
+                <input type="hidden" name="id" value="{{ series.id }}">
+                <input type="hidden" name="tipe" value="series">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control mb-2" id="inputUlasan" name="deskripsi" placeholder="Deskripsi Ulasan" maxlength="255" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control mb-2" id="inputRating" name="rating" placeholder="Rating (1-10)" min="1" max="10" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary mb-2" id="btnSubmit">Kirim Ulasan</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="deskripsi">Deskripsi Ulasan:</label>
-                    <textarea class="form-control" id="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <input type="number" class="form-control" id="rating" min="1" max="10" placeholder="Rating (1-10)" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
             </form>
-            <hr>
-            {% if reviews %}
-            <h3>Daftar Ulasan:</h3>
-            <ul>
-                {% for review in reviews %}
-                    <li>
-                        <strong>{{ review.author }}</strong>: {{ review.content }} - Rating: {{ review.rating }}
-                    </li>
+        </div>
+        {% if messages %}
+        <div class="message-container">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <p>Belum ada ulasan untuk seri ini.</p>
-            {% endif %}
         </div>
+        {% endif %}
+        <h5><b>Daftar Ulasan:</b></h5>
+        <ul class="list-disc pl-4" id="daftarUlasan">
+            {% for item in ulasan %}
+            <b>Username:</b> {{ item.username }}</br>
+            <b>Rating:</b> {{ item.rating }}</br>
+            <b>Deskripsi:</b> {{ item.deskripsi }}</br></br>
+            {% empty %}
+            <div class="empty">Belum ada ulasan</div>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+<script>
+    document.getElementById("btnSubmit").addEventListener("click", function() {
+        var inputRating = document.getElementById("inputRating").value;
+        if (isNaN(inputRating) || inputRating < 0 || inputRating > 10) {
+            alert("Rating harus dalam rentang 0-10");
+            return false;
+        }
+        console.log("Rating: " + inputRating);
+    });
+</script>
 {% endblock %}

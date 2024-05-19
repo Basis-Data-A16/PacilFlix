@@ -45,33 +45,57 @@
     </div>
 
     <!-- Bagian Ulasan -->
-    <div class="card shadow mt-3">
-        <div class="card-body">
-            <h2>Bagian Ulasan</h2>
-            <form action="#" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="nama">Nama:</label>
-                    <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama Anda" required>
+    <div class="row-md-4">
+        <h2 class="title">Bagian Ulasan</h2>
+        <div class="form-group">
+            <form action="{% url 'trailer:add_ulasan' %}" method="post">
+                {% csrf_token %}  
+                <input type="hidden" name="id" value="{{ film.id }}">
+                <input type="hidden" name="tipe" value="film">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control mb-2" id="inputUlasan" name="deskripsi" placeholder="Deskripsi Ulasan" maxlength="255" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control mb-2" id="inputRating" name="rating" placeholder="Rating (1-10)" min="1" max="10" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary mb-2" id="btnSubmit">Kirim Ulasan</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="deskripsi">Deskripsi Ulasan:</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi ulasan Anda" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="rating">Rating:</label>
-                    <input type="number" class="form-control" id="rating" name="rating" min="1" max="10" placeholder="Rating (1-10)" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
             </form>
-            <hr>
-            <h3>Daftar Ulasan:</h3>
-            <div class="ulasan">
-                {% for review in film.reviews %}
-                    <p><strong>{{ review.nama }}</strong>: {{ review.deskripsi }} - Rating: {{ review.rating }}</p>
-                {% endfor %}
-            </div>
         </div>
+        {% if messages %}
+        <div class="message-container">
+            <ul class="messages">
+                {% for message in messages %}
+                {% if 'ulasan' in message.tags %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <h5><b>Daftar Ulasan:</b></h5>
+        <ul class="list-disc pl-4" id="daftarUlasan">
+            {% for item in ulasan %}
+            <b>Username:</b> {{ item.username }}</br>
+            <b>Rating:</b> {{ item.rating }}</br>
+            <b>Deskripsi:</b> {{ item.deskripsi }}</br></br>
+            {% empty %}
+            <div class="empty">Belum ada ulasan</div>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+<script>
+    document.getElementById("btnSubmit").addEventListener("click", function() {
+        var inputRating = document.getElementById("inputRating").value;
+        if (isNaN(inputRating) || inputRating < 0 || inputRating > 10) {
+            alert("Rating harus dalam rentang 0-10");
+            return false;
+        }
+        console.log("Rating: " + inputRating);
+    });
+</script>
 {% endblock %}
